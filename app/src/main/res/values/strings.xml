@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Bugün Ne Yesek</string>
+    <string name="select_ingredients_title">Malzeme Seçme</string>
+    <string name="recipes_list_title">Tarif Listesi</string>
+
+</resources>
