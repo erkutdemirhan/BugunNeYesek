@@ -5,4 +5,14 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="AutoCompleteTextViewTheme" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+    </style>
+
+    <style name="ButtonTheme" parent="Base.Widget.AppCompat.Button">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+    </style>
 </resources>
