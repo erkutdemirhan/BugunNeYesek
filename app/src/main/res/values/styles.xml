@@ -4,15 +4,24 @@
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropdownItem</item>
     </style>
 
-    <style name="AutoCompleteTextViewTheme" parent="Base.Widget.AppCompat.EditText">
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+   <style name="SpinnerItem">
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:background">@drawable/spinner_rectangle</item>
+   </style>
+
+    <style name="SpinnerDropdownItem">
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:background">@drawable/spinner_rectangle</item>
     </style>
 
-    <style name="ButtonTheme" parent="Base.Widget.AppCompat.Button">
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:colorPrimaryDark">@color/primary_dark</item>
-    </style>
 </resources>

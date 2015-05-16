@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.erkutdemirhan.bugunneyesek.R;
@@ -24,15 +24,14 @@ import java.util.List;
  */
 public class SelectIngredients extends Fragment {
 
+    private static final String INGR_LIST_KEY = "ingredients_list_key";
+
     private List<String> mIngredients;
-    private AutoCompleteTextView mAutoCompleteTextView;
-    private ArrayAdapter<String> mAutoCompleteAdapter;
 
     private RecyclerView mRecyclerView;
     private IngredientsViewAdapter mIngredientsViewAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
-    private Button mAddIngredientButton;
+    private Spinner mSpinner;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,19 +39,28 @@ public class SelectIngredients extends Fragment {
 
         populateIngredientsList();
 
-        mAutoCompleteTextView = (AutoCompleteTextView) rootView.findViewById(R.id.select_ingredients_autocomplete);
-        mAutoCompleteAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, mIngredients);
-        mAutoCompleteTextView.setAdapter(mAutoCompleteAdapter);
+        mSpinner = (Spinner) rootView.findViewById(R.id.select_ingredients_spinner);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mIngredients);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(spinnerAdapter);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.select_ingredients_recyclerview);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mIngredientsViewAdapter = new IngredientsViewAdapter(mRecyclerView);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        ArrayList<String> ingredientsList;
+        if(savedInstanceState != null) {
+            ingredientsList = savedInstanceState.getStringArrayList(INGR_LIST_KEY);
+        } else {
+            ingredientsList = new ArrayList<>();
+        }
+
+        mIngredientsViewAdapter = new IngredientsViewAdapter(mRecyclerView, ingredientsList);
         mRecyclerView.setAdapter(mIngredientsViewAdapter);
 
-        mAddIngredientButton = (Button) rootView.findViewById(R.id.select_ingredients_button);
-        mAddIngredientButton.setOnClickListener(new View.OnClickListener() {
+        Button addIngredientsButton = (Button) rootView.findViewById(R.id.select_ingredients_button);
+        addIngredientsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addIngredient();
@@ -60,6 +68,12 @@ public class SelectIngredients extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(INGR_LIST_KEY, mIngredientsViewAdapter.getIngredientsList());
     }
 
     private void populateIngredientsList() {
@@ -77,7 +91,7 @@ public class SelectIngredients extends Fragment {
     }
 
     private void addIngredient() {
-        String ingredient = mAutoCompleteTextView.getText().toString();
+        String ingredient = String.valueOf(mSpinner.getSelectedItem());
         if(!ingredient.equals("")) {
             if(mIngredientsViewAdapter.isItemAddedBefore(ingredient)) {
                 Toast.makeText(this.getActivity(), "Bu malzemeyi listeye daha önceden eklediniz!", Toast.LENGTH_SHORT).show();

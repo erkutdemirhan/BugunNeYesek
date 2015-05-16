@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsViewAdapter.ViewHolder> {
 
-    private List<String> mList;
+    private ArrayList<String> mList;
     private RecyclerView mRecyclerView;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -44,9 +44,9 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
         }
     }
 
-    public IngredientsViewAdapter(RecyclerView recyclerView) {
+    public IngredientsViewAdapter(RecyclerView recyclerView, ArrayList<String> ingredientsList) {
         mRecyclerView = recyclerView;
-        mList = new ArrayList<>();
+        mList = ingredientsList;
     }
 
     @Override
@@ -83,5 +83,9 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
             }
         }
         return false;
+    }
+
+    public ArrayList<String> getIngredientsList() {
+        return mList;
     }
 }
