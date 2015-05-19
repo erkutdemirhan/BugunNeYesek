@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.erkutdemirhan.bugunneyesek.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Erkut Demirhan on 13.05.2015.

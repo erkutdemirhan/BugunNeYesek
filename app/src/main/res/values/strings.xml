@@ -5,5 +5,6 @@
     <string name="select_ingredients_title">Malzeme Seçme</string>
     <string name="recipes_list_title">Tarif Listesi</string>
     <string name="select_ingredients_button">Malzeme Ekle</string>
+    <string name="recipe_ingredients_title">Malzemeler:</string>
 
 </resources>
