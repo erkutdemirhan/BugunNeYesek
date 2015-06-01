@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.erkutdemirhan.bugunneyesek.R;
+import com.erkutdemirhan.bugunneyesek.domain.Ingredient;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ import java.util.ArrayList;
  */
 public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsViewAdapter.ViewHolder> {
 
-    private ArrayList<String> mList;
+    private ArrayList<Ingredient> mIngredientList;
     private RecyclerView mRecyclerView;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -44,9 +45,9 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
         }
     }
 
-    public IngredientsViewAdapter(RecyclerView recyclerView, ArrayList<String> ingredientsList) {
+    public IngredientsViewAdapter(RecyclerView recyclerView, ArrayList<Ingredient> ingredientList) {
         mRecyclerView = recyclerView;
-        mList = ingredientsList;
+        mIngredientList = ingredientList;
     }
 
     @Override
@@ -58,34 +59,34 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
 
     @Override
     public void onBindViewHolder(IngredientsViewAdapter.ViewHolder holder, int position) {
-        holder.setTextView(mList.get(position));
+        holder.setTextView(mIngredientList.get(position).toString());
     }
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mIngredientList.size();
     }
 
     public void removeAt(int position) {
-        mList.remove(position);
+        mIngredientList.remove(position);
         notifyItemRemoved(position);
     }
 
-    public void addItem(String item) {
-        mList.add(item);
-        notifyItemInserted(mList.size()-1);
+    public void addItem(Ingredient ingredient) {
+        mIngredientList.add(ingredient);
+        notifyItemInserted(mIngredientList.size()-1);
     }
 
-    public boolean isItemAddedBefore(String item) {
-        for(String ingredient:mList) {
-            if(ingredient.equalsIgnoreCase(item)) {
+    public boolean isItemAddedBefore(Ingredient ingredient) {
+        for(Ingredient element: mIngredientList) {
+            if(element.equals(ingredient)) {
                 return true;
             }
         }
         return false;
     }
 
-    public ArrayList<String> getIngredientsList() {
-        return mList;
+    public ArrayList<Ingredient> getIngredientsList() {
+        return mIngredientList;
     }
 }

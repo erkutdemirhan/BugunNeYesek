@@ -31,7 +31,6 @@ public class SelectIngredients extends Fragment {
     /** Key to save user defined ingredient list into the saved instance state bundle  */
     private static final String INGR_LIST_KEY = "ingredients_list_key";
 
-    private List<String> mIngredients;
     private RecyclerView mRecyclerView;
     private IngredientsViewAdapter mIngredientsViewAdapter;
 
@@ -41,9 +40,11 @@ public class SelectIngredients extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView =inflater.inflate(R.layout.select_ingredients, container, false);
 
-        populateIngredientsList();
+        BugunNeYesek bugunNeYesek = (BugunNeYesek) getActivity().getApplication();
         mSpinner = (Spinner) rootView.findViewById(R.id.select_ingredients_spinner);
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mIngredients);
+        ArrayAdapter<Ingredient> spinnerAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_item,
+                bugunNeYesek.getIngredientListMap().get(RecipeType.MAIN_COURSE));
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(spinnerAdapter);
 
@@ -52,9 +53,9 @@ public class SelectIngredients extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
 
-        ArrayList<String> ingredientsList;
+        ArrayList<Ingredient> ingredientsList;
         if(savedInstanceState != null) {
-            ingredientsList = savedInstanceState.getStringArrayList(INGR_LIST_KEY);
+            ingredientsList = savedInstanceState.getParcelableArrayList(INGR_LIST_KEY);
         } else {
             ingredientsList = new ArrayList<>();
         }
@@ -76,27 +77,15 @@ public class SelectIngredients extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putStringArrayList(INGR_LIST_KEY, mIngredientsViewAdapter.getIngredientsList());
-    }
-
-    /**
-     * Adds all possible ingredients from recipes with specific recipe types, into the arraylist of
-     * the spinner.
-     */
-    private void populateIngredientsList() {
-        BugunNeYesek bugunNeYesek = (BugunNeYesek) getActivity().getApplication();
-        mIngredients = new ArrayList<>();
-        for(Ingredient ingredient:bugunNeYesek.getIngredientListMap().get(RecipeType.MAIN_COURSE)) {
-            mIngredients.add(ingredient.getName());
-        }
+        outState.putParcelableArrayList(INGR_LIST_KEY, mIngredientsViewAdapter.getIngredientsList());
     }
 
     /**
      * Adds the ingredient that is selected by the user, into the ingredient list adapter.
      */
     private void addIngredient() {
-        String ingredient = String.valueOf(mSpinner.getSelectedItem());
-        if(!ingredient.equals("")) {
+        Ingredient ingredient = (Ingredient) mSpinner.getSelectedItem();
+        if(ingredient != null) {
             if(mIngredientsViewAdapter.isItemAddedBefore(ingredient)) {
                 Toast.makeText(this.getActivity(), "Bu malzemeyi listeye daha önceden eklediniz!", Toast.LENGTH_SHORT).show();
             } else {
