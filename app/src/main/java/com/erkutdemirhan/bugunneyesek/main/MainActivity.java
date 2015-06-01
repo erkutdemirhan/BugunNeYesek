@@ -10,12 +10,17 @@ import android.view.MenuItem;
 import com.erkutdemirhan.bugunneyesek.R;
 import com.erkutdemirhan.bugunneyesek.tabs.SlidingTabLayout;
 
+/**
+ * Implements the main activity screen of the aplication
+ */
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
     private SlidingTabLayout mSlidingTabLayout;
+
+    /** Titles for the tabs */
     private CharSequence mTitles[] = {"Malzeme Seçme", "Tarif Listesi"};
 
     @Override

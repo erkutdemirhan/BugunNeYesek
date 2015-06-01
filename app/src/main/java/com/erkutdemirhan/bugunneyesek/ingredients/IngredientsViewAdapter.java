@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Erkut Demirhan on 13.05.2015.
+ * Adapter class to hold the ingredient view items
  */
 public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsViewAdapter.ViewHolder> {
 

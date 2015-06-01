@@ -10,19 +10,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.erkutdemirhan.bugunneyesek.R;
+import com.erkutdemirhan.bugunneyesek.domain.Recipe;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 /**
  * Created by Erkut Demirhan on 17.05.2015.
+ * Adapter class for the list of recipes
  */
 public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.ViewHolder> {
 
-    private String[] mTitleList = {"Karnıyarık", "Kuru Fasulye"};
-    private String[] mUrlList = {"https://drive.google.com/file/d/0Byrt7M0fS61eSjhFRzlKQmVhdEU/view?usp=sharing",
-                                 "https://drive.google.com/file/d/0Byrt7M0fS61eUi1TVU9XMHkwamc/view?usp=sharing"};
     private String mAvailableIngr = "Mevcut malzemeler";
     private String mUnavailableIng = "Mevcut olmayan malzemeler";
 
+    private ArrayList<Recipe> mRecipeList;
+
+    public RecipesViewAdapter(ArrayList<Recipe> recipeList) {
+        mRecipeList = recipeList;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -33,11 +39,11 @@ public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mRecipeTitleView.setText(mTitleList[position]);
+        holder.mRecipeTitleView.setText(mRecipeList.get(position).getRecipeName());
         holder.mAvailableIngrView.setText(mAvailableIngr);
         holder.mUnavailableIngrView.setText(mUnavailableIng);
         Context context = holder.mRecipeImageView.getContext();
-        Uri uri = Uri.parse(mUrlList[position]);
+        Uri uri = Uri.parse(mRecipeList.get(position).getImageUrl());
         Picasso.with(context).load(uri)
                 .error(R.drawable.recipe_image)
                 .placeholder(R.drawable.recipe_image)
@@ -46,7 +52,7 @@ public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.
 
     @Override
     public int getItemCount() {
-        return mTitleList.length;
+        return mRecipeList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

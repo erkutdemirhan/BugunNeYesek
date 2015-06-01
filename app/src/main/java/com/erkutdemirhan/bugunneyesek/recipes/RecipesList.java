@@ -10,9 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.erkutdemirhan.bugunneyesek.R;
+import com.erkutdemirhan.bugunneyesek.domain.RecipeType;
+import com.erkutdemirhan.bugunneyesek.main.BugunNeYesek;
 
 /**
  * Created by Erkut Demirhan on 12.05.2015.
+ * Fragment class that holds the list of recipe objects
  */
 public class RecipesList extends Fragment {
 
@@ -27,7 +30,8 @@ public class RecipesList extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
 
-        RecipesViewAdapter recipesViewAdapter = new RecipesViewAdapter();
+        BugunNeYesek bugunNeYesek = (BugunNeYesek) getActivity().getApplication();
+        RecipesViewAdapter recipesViewAdapter = new RecipesViewAdapter(bugunNeYesek.getRecipeListMap().get(RecipeType.MAIN_COURSE));
         mRecyclerView.setAdapter(recipesViewAdapter);
 
         return rootView;

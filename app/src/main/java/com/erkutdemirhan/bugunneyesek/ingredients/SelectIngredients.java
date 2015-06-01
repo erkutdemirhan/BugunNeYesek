@@ -15,19 +15,23 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.erkutdemirhan.bugunneyesek.R;
+import com.erkutdemirhan.bugunneyesek.domain.Ingredient;
+import com.erkutdemirhan.bugunneyesek.domain.RecipeType;
+import com.erkutdemirhan.bugunneyesek.main.BugunNeYesek;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Erkut Demirhan on 12.05.2015.
+ * Implements the fragment that the user creates an ingredient list
  */
 public class SelectIngredients extends Fragment {
 
+    /** Key to save user defined ingredient list into the saved instance state bundle  */
     private static final String INGR_LIST_KEY = "ingredients_list_key";
 
     private List<String> mIngredients;
-
     private RecyclerView mRecyclerView;
     private IngredientsViewAdapter mIngredientsViewAdapter;
 
@@ -38,7 +42,6 @@ public class SelectIngredients extends Fragment {
         View rootView =inflater.inflate(R.layout.select_ingredients, container, false);
 
         populateIngredientsList();
-
         mSpinner = (Spinner) rootView.findViewById(R.id.select_ingredients_spinner);
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mIngredients);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -76,20 +79,21 @@ public class SelectIngredients extends Fragment {
         outState.putStringArrayList(INGR_LIST_KEY, mIngredientsViewAdapter.getIngredientsList());
     }
 
+    /**
+     * Adds all possible ingredients from recipes with specific recipe types, into the arraylist of
+     * the spinner.
+     */
     private void populateIngredientsList() {
+        BugunNeYesek bugunNeYesek = (BugunNeYesek) getActivity().getApplication();
         mIngredients = new ArrayList<>();
-        mIngredients.add("Domates");
-        mIngredients.add("Patates");
-        mIngredients.add("Limon");
-        mIngredients.add("Ayçiçek Yağı");
-        mIngredients.add("Tuz");
-        mIngredients.add("Karabiber");
-        mIngredients.add("Patlıcan");
-        mIngredients.add("Havuç");
-        mIngredients.add("Ispanak");
-        mIngredients.add("Salatalık");
+        for(Ingredient ingredient:bugunNeYesek.getIngredientListMap().get(RecipeType.MAIN_COURSE)) {
+            mIngredients.add(ingredient.getName());
+        }
     }
 
+    /**
+     * Adds the ingredient that is selected by the user, into the ingredient list adapter.
+     */
     private void addIngredient() {
         String ingredient = String.valueOf(mSpinner.getSelectedItem());
         if(!ingredient.equals("")) {
