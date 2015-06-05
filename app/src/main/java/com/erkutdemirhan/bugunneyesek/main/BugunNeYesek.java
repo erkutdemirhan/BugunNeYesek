@@ -5,6 +5,7 @@ import android.app.Application;
 import com.erkutdemirhan.bugunneyesek.domain.Ingredient;
 import com.erkutdemirhan.bugunneyesek.domain.Recipe;
 import com.erkutdemirhan.bugunneyesek.domain.RecipeType;
+import com.erkutdemirhan.bugunneyesek.recipes.RecipesViewAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,12 +20,23 @@ public class BugunNeYesek extends Application {
 
     private HashMap<RecipeType, ArrayList<Recipe>> mRecipeListMap;
     private HashMap<RecipeType, ArrayList<Ingredient>> mIngredientListMap;
+    private RecipeType mCurrentRecipeType;
+
+    private RecipesViewAdapter mRecipesViewAdapter;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mRecipeListMap = new HashMap<>();
         mIngredientListMap = new HashMap<>();
+        for(RecipeType type:RecipeType.values()) {
+            ArrayList<Recipe> recipeList = new ArrayList<>();
+            ArrayList<Ingredient> ingredientList = new ArrayList<>();
+            mRecipeListMap.put(type, recipeList);
+            mIngredientListMap.put(type, ingredientList);
+        }
+        mCurrentRecipeType = RecipeType.MAIN_COURSE;
+        mRecipesViewAdapter = new RecipesViewAdapter();
     }
 
     public HashMap<RecipeType, ArrayList<Recipe>> getRecipeListMap() {
@@ -35,21 +47,27 @@ public class BugunNeYesek extends Application {
         return this.mIngredientListMap;
     }
 
+    public RecipeType getCurrentRecipeType() {
+        return this.mCurrentRecipeType;
+    }
+
+    public RecipesViewAdapter getRecipesViewAdapter() {
+        return this.mRecipesViewAdapter;
+    }
+
+    public void setCurrentRecipeType(RecipeType type) {
+        this.mCurrentRecipeType = type;
+    }
+
     /**
      * Initializes the recipe and the ingredient maps, using a recipe list as the input.
      * @param list
      */
     public void initializeMaps(ArrayList<Recipe> list) {
         for(Recipe recipe:list) {
-            if(mRecipeListMap.containsKey(recipe.getRecipeType())) {
-                mRecipeListMap.get(recipe.getRecipeType()).add(recipe);
-            } else {
-                ArrayList<Recipe> recipeList = new ArrayList<>();
-                recipeList.add(recipe);
-                mRecipeListMap.put(recipe.getRecipeType(), recipeList);
-            }
+            mRecipeListMap.get(recipe.getRecipeType()).add(recipe);
         }
-        for(RecipeType recipeType:mRecipeListMap.keySet()) {
+        for(RecipeType recipeType:RecipeType.values()) {
             initializeIngredientListMap(recipeType, mRecipeListMap.get(recipeType));
         }
     }

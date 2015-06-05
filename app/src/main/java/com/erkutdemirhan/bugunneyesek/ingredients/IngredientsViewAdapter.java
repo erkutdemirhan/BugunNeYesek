@@ -72,6 +72,11 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
         notifyItemRemoved(position);
     }
 
+    public void removeAll() {
+        mIngredientList.clear();
+        notifyItemRangeChanged(0, getItemCount());
+    }
+
     public void addItem(Ingredient ingredient) {
         mIngredientList.add(ingredient);
         notifyItemInserted(mIngredientList.size()-1);

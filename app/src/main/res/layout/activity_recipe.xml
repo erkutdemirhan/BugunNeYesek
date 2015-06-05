@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/recipe_activity_tool_bar"
+        layout="@layout/tool_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/text_icons">
+
+            <ImageView
+                android:id="@+id/recipe_activity_image"
+                android:adjustViewBounds="true"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:src="@drawable/recipe_image"/>
+
+            <TextView
+                android:id="@+id/recipe_activity_header"
+                android:gravity="center"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primary_text"
+                android:textSize="25sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/recipe_ingredients_title"
+                android:textSize="15sp"
+                android:textColor="@color/secondary_text"/>
+
+            <TextView
+                android:id="@+id/recipe_activity_available_ingredients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="10sp"
+                android:textColor="@android:color/holo_green_dark"/>
+
+            <TextView
+                android:id="@+id/recipe_activity_unavailable_ingredients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="10sp"
+                android:textColor="@android:color/holo_red_dark"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/recipe_content_title"
+                android:textColor="@color/secondary_text"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/recipe_activity_content_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="10sp"
+                android:textColor="@color/primary_text"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

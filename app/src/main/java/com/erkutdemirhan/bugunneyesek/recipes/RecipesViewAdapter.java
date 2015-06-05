@@ -1,16 +1,20 @@
 package com.erkutdemirhan.bugunneyesek.recipes;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.erkutdemirhan.bugunneyesek.R;
 import com.erkutdemirhan.bugunneyesek.domain.Recipe;
+import com.erkutdemirhan.bugunneyesek.main.MainActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,8 +30,8 @@ public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.
 
     private ArrayList<Recipe> mRecipeList;
 
-    public RecipesViewAdapter(ArrayList<Recipe> recipeList) {
-        mRecipeList = recipeList;
+    public RecipesViewAdapter() {
+        mRecipeList = new ArrayList<>();
     }
 
     @Override
@@ -55,7 +59,17 @@ public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.
         return mRecipeList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public void removeAllRecipes() {
+        mRecipeList.clear();
+        notifyItemRangeChanged(0, getItemCount());
+    }
+
+    public void addRecipes(ArrayList<Recipe> recipes) {
+        mRecipeList.addAll(recipes);
+        notifyItemRangeChanged(0, getItemCount());
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView mRecipeTitleView;
         public TextView mAvailableIngrView;
@@ -68,6 +82,18 @@ public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.
             mAvailableIngrView = (TextView) itemView.findViewById(R.id.available_ingredients);
             mUnavailableIngrView = (TextView) itemView.findViewById(R.id.unavailable_ingredients);
             mRecipeImageView = (ImageView) itemView.findViewById(R.id.recipe_picture);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Recipe recipe = mRecipeList.get(getPosition());
+
+            Intent intent = new Intent(v.getContext(), RecipeActivity.class);
+            Bundle extras = new Bundle();
+            extras.putStringArray(RecipeActivity.RECIPE_TEXT_KEY, new String[] {recipe.getRecipeName(), recipe.getRecipeContent(), recipe.getImageUrl()});
+            intent.putExtras(extras);
+            v.getContext().startActivity(intent);
         }
     }
 }

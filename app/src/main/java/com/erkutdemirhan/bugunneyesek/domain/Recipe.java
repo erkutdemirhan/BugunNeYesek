@@ -1,5 +1,8 @@
 package com.erkutdemirhan.bugunneyesek.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
