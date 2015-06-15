@@ -1,14 +1,18 @@
 package com.erkutdemirhan.bugunneyesek.ingredients;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.erkutdemirhan.bugunneyesek.R;
 import com.erkutdemirhan.bugunneyesek.domain.Ingredient;
+import com.erkutdemirhan.bugunneyesek.main.BugunNeYesek;
 
 import java.util.ArrayList;
 
@@ -18,24 +22,22 @@ import java.util.ArrayList;
  */
 public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsViewAdapter.ViewHolder> {
 
-    private ArrayList<Ingredient> mIngredientList;
-    private RecyclerView mRecyclerView;
+    private BugunNeYesek mBugunNeYesek;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextView;
         private ImageView mImageView;
-        private View mView;
 
         public ViewHolder(View v) {
             super(v);
-            mView = v;
             mTextView = (TextView) v.findViewById(R.id.ingredient_name);
             mImageView = (ImageView) v.findViewById(R.id.remove_ingredient_icon);
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = mRecyclerView.getChildPosition(mView);
-                    removeAt(position);
+                    int position = getPosition();
+                    removeIngredient(position);
+                    Log.d("onClick", "remove ingredient at position: " + position);
                 }
             });
         }
@@ -45,9 +47,8 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
         }
     }
 
-    public IngredientsViewAdapter(RecyclerView recyclerView, ArrayList<Ingredient> ingredientList) {
-        mRecyclerView = recyclerView;
-        mIngredientList = ingredientList;
+    public IngredientsViewAdapter(Context context) {
+        mBugunNeYesek = (BugunNeYesek) context.getApplicationContext();
     }
 
     @Override
@@ -59,39 +60,48 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
 
     @Override
     public void onBindViewHolder(IngredientsViewAdapter.ViewHolder holder, int position) {
-        holder.setTextView(mIngredientList.get(position).toString());
+        holder.setTextView(mBugunNeYesek.getUserIngredientList().get(position).toString());
     }
 
     @Override
     public int getItemCount() {
-        return mIngredientList.size();
+        return mBugunNeYesek.getUserIngredientList().size();
     }
 
-    public void removeAt(int position) {
-        mIngredientList.remove(position);
-        notifyItemRemoved(position);
+    /**
+     * Removes the ingredient at given position from the user ingredient list.
+     * @param position
+     */
+    public void removeIngredient(int position) {
+        if(position >= 0 && position < getItemCount()) {
+            mBugunNeYesek.getUserIngredientList().remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
-    public void removeAll() {
-        mIngredientList.clear();
+    /**
+     * Removes all ingredients from the user ingredient list.
+     */
+    public void removeAllIngredients() {
+        mBugunNeYesek.getUserIngredientList().clear();
         notifyItemRangeChanged(0, getItemCount());
     }
 
-    public void addItem(Ingredient ingredient) {
-        mIngredientList.add(ingredient);
-        notifyItemInserted(mIngredientList.size()-1);
-    }
-
-    public boolean isItemAddedBefore(Ingredient ingredient) {
-        for(Ingredient element: mIngredientList) {
-            if(element.equals(ingredient)) {
-                return true;
+    /**
+     * Adds given ingredient to the user ingredient list, if it was not added before.
+     * Returns true for successful addition, false otherwise.
+     *
+     * @param ingredient
+     * @return
+     */
+    public boolean addIngredient(Ingredient ingredient) {
+        for(Ingredient ingr:mBugunNeYesek.getUserIngredientList()) {
+            if(ingr.equals(ingredient)) {
+                return false;
             }
         }
-        return false;
-    }
-
-    public ArrayList<Ingredient> getIngredientsList() {
-        return mIngredientList;
+        mBugunNeYesek.getUserIngredientList().add(ingredient);
+        notifyItemInserted(getItemCount()-1);
+        return true;
     }
 }

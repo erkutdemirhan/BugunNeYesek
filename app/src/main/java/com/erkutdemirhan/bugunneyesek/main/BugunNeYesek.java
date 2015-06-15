@@ -18,10 +18,10 @@ import java.util.HashSet;
  */
 public class BugunNeYesek extends Application {
 
+    private ArrayList<Ingredient> mUserIngredientList;
     private HashMap<RecipeType, ArrayList<Recipe>> mRecipeListMap;
     private HashMap<RecipeType, ArrayList<Ingredient>> mIngredientListMap;
     private RecipeType mCurrentRecipeType;
-
     private RecipesViewAdapter mRecipesViewAdapter;
 
     @Override
@@ -37,6 +37,7 @@ public class BugunNeYesek extends Application {
         }
         mCurrentRecipeType = RecipeType.MAIN_COURSE;
         mRecipesViewAdapter = new RecipesViewAdapter();
+        mUserIngredientList = new ArrayList<>();
     }
 
     public HashMap<RecipeType, ArrayList<Recipe>> getRecipeListMap() {
@@ -45,6 +46,10 @@ public class BugunNeYesek extends Application {
 
     public HashMap<RecipeType, ArrayList<Ingredient>> getIngredientListMap() {
         return this.mIngredientListMap;
+    }
+
+    public ArrayList<Ingredient> getUserIngredientList() {
+        return this.mUserIngredientList;
     }
 
     public RecipeType getCurrentRecipeType() {

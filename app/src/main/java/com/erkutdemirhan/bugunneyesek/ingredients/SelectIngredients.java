@@ -32,9 +32,6 @@ import java.util.List;
  */
 public class SelectIngredients extends Fragment {
 
-    /** Key to save user defined ingredient list into the saved instance state bundle  */
-    private static final String INGR_LIST_KEY = "ingredients_list_key";
-
     private static final int RECIPE_TYPE_ITEM_INDEX = 0;
 
     private BugunNeYesek mBugunNeYesek;
@@ -66,14 +63,7 @@ public class SelectIngredients extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
 
-        ArrayList<Ingredient> ingredientsList;
-        if(savedInstanceState != null) {
-            ingredientsList = savedInstanceState.getParcelableArrayList(INGR_LIST_KEY);
-        } else {
-            ingredientsList = new ArrayList<>();
-        }
-
-        mIngredientsViewAdapter = new IngredientsViewAdapter(mRecyclerView, ingredientsList);
+        mIngredientsViewAdapter = new IngredientsViewAdapter(this.getActivity());
         mRecyclerView.setAdapter(mIngredientsViewAdapter);
 
         Button addIngredientsButton = (Button) rootView.findViewById(R.id.select_ingredients_button);
@@ -88,23 +78,15 @@ public class SelectIngredients extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(INGR_LIST_KEY, mIngredientsViewAdapter.getIngredientsList());
-    }
-
     /**
      * Adds the ingredient that is selected by the user, into the ingredient list adapter.
      */
     private void addIngredient() {
         Ingredient ingredient = (Ingredient) mSpinner.getSelectedItem();
         if(ingredient != null) {
-            if(mIngredientsViewAdapter.isItemAddedBefore(ingredient)) {
-                Toast.makeText(this.getActivity(), "Bu malzemeyi listeye daha önceden eklediniz!", Toast.LENGTH_SHORT).show();
-            } else {
-                mIngredientsViewAdapter.addItem(ingredient);
-            }
+            if(!mIngredientsViewAdapter.addIngredient(ingredient)) {
+                Toast.makeText(this.getActivity(), "Bu malzemeyi daha önce eklediniz!", Toast.LENGTH_SHORT).show();
+            };
         }
     }
 
@@ -135,7 +117,7 @@ public class SelectIngredients extends Fragment {
                 mSpinnerList.addAll(mBugunNeYesek.getIngredientListMap().get(mBugunNeYesek.getCurrentRecipeType()));
                 mSpinnerAdapter.notifyDataSetChanged();
 
-                mIngredientsViewAdapter.removeAll();
+                mIngredientsViewAdapter.removeAllIngredients();
                 item.setChecked(true);
                 return true;
             }
