@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.erkutdemirhan.bugunneyesek.R;
+import com.erkutdemirhan.bugunneyesek.database.DbHelperFactory;
 import com.erkutdemirhan.bugunneyesek.domain.Ingredient;
 import com.erkutdemirhan.bugunneyesek.domain.RecipeType;
 import com.erkutdemirhan.bugunneyesek.main.BugunNeYesek;
@@ -34,9 +35,7 @@ public class SelectIngredients extends Fragment {
 
     private static final int RECIPE_TYPE_ITEM_INDEX = 0;
 
-    private BugunNeYesek mBugunNeYesek;
-
-    private RecyclerView mRecyclerView;
+    private RecyclerView           mRecyclerView;
     private IngredientsViewAdapter mIngredientsViewAdapter;
 
     private Spinner mSpinner;
@@ -49,21 +48,19 @@ public class SelectIngredients extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView =inflater.inflate(R.layout.select_ingredients, container, false);
 
-        mBugunNeYesek = (BugunNeYesek) getActivity().getApplication();
-
-        mSpinner = (Spinner) rootView.findViewById(R.id.select_ingredients_spinner);
-        mSpinnerList = new ArrayList<>();
-        mSpinnerList.addAll(mBugunNeYesek.getIngredientListMap().get(mBugunNeYesek.getCurrentRecipeType()));
+        mSpinner        = (Spinner) rootView.findViewById(R.id.select_ingredients_spinner);
+        mSpinnerList    = new ArrayList<>();
+        mSpinnerList.addAll(DbHelperFactory.getDatabaseHelper(getActivity()).getIngredientsForRecipeType(1));
         mSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mSpinnerList);
         mSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(mSpinnerAdapter);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.select_ingredients_recyclerview);
+        mRecyclerView   = (RecyclerView) rootView.findViewById(R.id.select_ingredients_recyclerview);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mIngredientsViewAdapter = new IngredientsViewAdapter(this.getActivity());
+        mIngredientsViewAdapter = new IngredientsViewAdapter();
         mRecyclerView.setAdapter(mIngredientsViewAdapter);
 
         Button addIngredientsButton = (Button) rootView.findViewById(R.id.select_ingredients_button);
@@ -94,35 +91,30 @@ public class SelectIngredients extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
         menuInflater.inflate(R.menu.select_ingredients_menu, menu);
-
-        mRecipeTypeMenu = menu.getItem(RECIPE_TYPE_ITEM_INDEX).getSubMenu();
-        for(RecipeType type:RecipeType.values()) {
-            mRecipeTypeMenu.add(R.id.recipe_type_group, Menu.FIRST + type.ordinal(), type.ordinal(), type.getText());
+        ArrayList<RecipeType> recipeTypes = BugunNeYesek.getInstance().getRecipeTypeList();
+        mRecipeTypeMenu                   = menu.getItem(RECIPE_TYPE_ITEM_INDEX).getSubMenu();
+        for(RecipeType type: recipeTypes) {
+            mRecipeTypeMenu.add(R.id.recipe_type_group, Menu.FIRST + type.getTypeId(), type.getTypeId(), type.getTypeName());
         }
         mRecipeTypeMenu.setGroupCheckable(R.id.recipe_type_group, true, true);
-        mRecipeTypeMenu.getItem(mBugunNeYesek.getCurrentRecipeType().ordinal()).setChecked(true);
+        mRecipeTypeMenu.getItem(recipeTypes.get(0).getTypeId()).setChecked(true);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        for(RecipeType type:RecipeType.values()) {
-            if(Menu.FIRST + type.ordinal() == id) {
-                Log.d("onOptionsItemSelected", "Recipe type: "+type.getText());
-                mBugunNeYesek.setCurrentRecipeType(type);
-                mBugunNeYesek.getRecipesViewAdapter().removeAllRecipes();
-                mBugunNeYesek.getRecipesViewAdapter().addRecipes(mBugunNeYesek.getRecipeListMap().get(mBugunNeYesek.getCurrentRecipeType()));
+        ArrayList<RecipeType> recipeTypes = BugunNeYesek.getInstance().getRecipeTypeList();
+        for(RecipeType type:recipeTypes) {
+            if(Menu.FIRST + type.getTypeId() == id) {
+                Log.d("onOptionsItemSelected", "Recipe type: "+type.getTypeName());
                 mSpinnerList.clear();
-                mSpinnerList.addAll(mBugunNeYesek.getIngredientListMap().get(mBugunNeYesek.getCurrentRecipeType()));
+                mSpinnerList.addAll(DbHelperFactory.getDatabaseHelper(getActivity()).getIngredientsForRecipeType(type.getTypeId()));
                 mSpinnerAdapter.notifyDataSetChanged();
-
                 mIngredientsViewAdapter.removeAllIngredients();
                 item.setChecked(true);
                 return true;
             }
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

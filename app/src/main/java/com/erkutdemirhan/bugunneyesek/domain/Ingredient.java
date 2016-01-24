@@ -9,8 +9,8 @@ import android.os.Parcelable;
  */
 public class Ingredient implements Comparable<Ingredient>, Parcelable {
 
-    private static final Creator<Ingredient> CREATOR
-            = new Creator<Ingredient>() {
+    private static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+
         @Override
         public Ingredient createFromParcel(Parcel source) {
             return new Ingredient(source);
@@ -22,32 +22,52 @@ public class Ingredient implements Comparable<Ingredient>, Parcelable {
         }
     };
 
-    private final String mName;
+    private final int    mIngredientId;
+    private final String mIngredientName;
+    private final String mIngredientAmount;
 
-    public Ingredient(String name) {
-        mName = name;
+    public Ingredient(int id, String name, String  amount) {
+        mIngredientId     = id;
+        mIngredientName   = name;
+        mIngredientAmount = amount;
+    }
+
+    public int getIngredientId() {
+        return mIngredientId;
+    }
+
+    public String getIngredientName() {
+        return mIngredientName;
+    }
+
+    public String getIngredientAmount() {
+        return mIngredientAmount;
     }
 
     @Override
     public String toString() {
-        return mName;
+        return mIngredientName;
     }
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Ingredient) && (mName.equalsIgnoreCase(((Ingredient) obj).mName));
+        if(obj == null) return false;
+        if(obj == this) return true;
+        if(!(obj instanceof Ingredient)) return false;
+        return ((Ingredient) obj).getIngredientId() == this.getIngredientId();
     }
 
     @Override
     public int hashCode() {
-        return mName.toLowerCase().hashCode();
+        int result = 23;
+        result = result * 31 + getIngredientId();
+        return result;
     }
 
     @Override
     public int compareTo(Ingredient another) {
-        return mName.compareTo(another.mName);
+        return mIngredientName.compareTo(another.mIngredientName);
     }
-
 
     @Override
     public int describeContents() {
@@ -56,10 +76,15 @@ public class Ingredient implements Comparable<Ingredient>, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mName);
+        dest.writeStringArray(new String[]{getIngredientName(), getIngredientAmount()});
+        dest.writeInt(getIngredientId());
     }
 
     private Ingredient(Parcel in) {
-        mName = in.readString();
+        String[] args     = new String[2];
+        mIngredientId     = in.readInt();
+        in.readStringArray(args);
+        mIngredientName   = args[0];
+        mIngredientAmount = args[1];
     }
 }

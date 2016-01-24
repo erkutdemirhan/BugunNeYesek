@@ -1,8 +1,5 @@
 package com.erkutdemirhan.bugunneyesek.domain;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.util.ArrayList;
 
 /**
@@ -11,44 +8,63 @@ import java.util.ArrayList;
  */
 public class Recipe {
 
-    private final String mRecipeName;
-    private final String mRecipeContent;
-    private final String mImageUrl;
-    private final RecipeType mRecipeType;
+    private final int                   mRecipeId;
+    private final String                mRecipeName;
+    private final String                mInstructions;
+    private final String                mImageFileName;
+    private final RecipeType            mRecipeType;
     private final ArrayList<Ingredient> mIngredientList;
 
-    public Recipe(String name, String content, String imageUrl, RecipeType type, ArrayList<Ingredient> ingredientList) {
-        mRecipeName = name;
-        mRecipeContent = content;
-        mRecipeType = type;
-        mImageUrl = imageUrl;
+    public Recipe(int id,
+                  String name,
+                  String instructions,
+                  String imageFileName,
+                  RecipeType type,
+                  ArrayList<Ingredient> ingredientList) {
+        mRecipeId       = id;
+        mRecipeName     = name;
+        mInstructions   = instructions;
+        mRecipeType     = type;
+        mImageFileName  = imageFileName;
         mIngredientList = ingredientList;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof Recipe) &&
-                (this.getRecipeName().equalsIgnoreCase(((Recipe) obj).getRecipeName())) &&
-                (this.getRecipeType() == ((Recipe) obj).getRecipeType());
+    public int getRecipeId() {
+        return mRecipeId;
     }
 
     public String getRecipeName() {
-        return this.mRecipeName;
+        return mRecipeName;
     }
 
-    public String getRecipeContent() {
-        return this.mRecipeContent;
+    public String getInstructions() {
+        return mInstructions;
     }
 
-    public String getImageUrl() {
-        return this.mImageUrl;
+    public String getImageFileName() {
+        return mImageFileName;
     }
 
     public RecipeType getRecipeType() {
-        return this.mRecipeType;
+        return mRecipeType;
     }
 
     public ArrayList<Ingredient> getIngredientList() {
         return this.mIngredientList;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) return false;
+        if(obj == this) return true;
+        if(!(obj instanceof Recipe)) return false;
+        return ((Recipe) obj).getRecipeId() == this.getRecipeId();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = result * 31 + getRecipeId();
+        return result;
     }
 }

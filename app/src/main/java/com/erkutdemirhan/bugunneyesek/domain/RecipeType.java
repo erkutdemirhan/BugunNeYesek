@@ -1,42 +1,38 @@
 package com.erkutdemirhan.bugunneyesek.domain;
 
 /**
- * Created by Erkut Demirhan on 19.05.2015.
- * Class to represent the type of the recipe
+ * Created by Erkut on 26/01/16.
  */
-public enum RecipeType {
-    DESSERT("Tatlı"),
-    DRINK("İçecek"),
-    MAIN_COURSE("Ana yemek"),
-    SNACKS("Atıştırmalık");
+public class RecipeType {
 
-    private String text;
+    private final int    mTypeId;
+    private final String mTypeName;
 
-    private RecipeType(String input) {
-        this.text = input;
+    public RecipeType(int id, String name) {
+        mTypeId   = id;
+        mTypeName = name;
     }
 
-    /**
-     * Returns the textual representation of the recipe type.
-     */
-    public String getText() {
-        return this.text;
+    public int getTypeId() {
+        return mTypeId;
     }
 
-    /**
-     * Compares the input string with string representations of the recipe types.
-     * If there is a matching recipe type, returns it. Throws an IllegalArgumentException otherwise.
-     */
-    public static RecipeType stringToRecipeType(String input) {
-        if(input != null) {
-            for(RecipeType type:RecipeType.values()) {
-                if(type.getText().equalsIgnoreCase(input)) {
-                    return type;
-                }
-            }
-        } else {
-            throw new IllegalArgumentException();
-        }
-        return null;
+    public String getTypeName() {
+        return mTypeName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) return false;
+        if(obj == this) return true;
+        if(!(obj instanceof RecipeType)) return false;
+        return ((RecipeType) obj).getTypeId() == this.getTypeId();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 19;
+        result = result * 31 + getTypeId();
+        return result;
     }
 }
