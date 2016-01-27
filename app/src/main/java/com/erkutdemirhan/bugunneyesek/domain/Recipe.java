@@ -1,12 +1,15 @@
 package com.erkutdemirhan.bugunneyesek.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Erkut Demirhan on 19.05.2015.
  * Class to represent cooking recipes
  */
-public class Recipe {
+public class Recipe implements Comparable<Recipe>, Serializable {
+
+    public static final String KEY = "Recipe";
 
     private final int                   mRecipeId;
     private final String                mRecipeName;
@@ -66,5 +69,10 @@ public class Recipe {
         int result = 17;
         result = result * 31 + getRecipeId();
         return result;
+    }
+
+    @Override
+    public int compareTo(Recipe another) {
+        return getRecipeName().compareTo(another.getRecipeName());
     }
 }

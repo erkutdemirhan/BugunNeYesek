@@ -3,7 +3,6 @@ package com.erkutdemirhan.bugunneyesek.recipes;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.erkutdemirhan.bugunneyesek.database.DbHelperFactory;
 import com.erkutdemirhan.bugunneyesek.domain.Ingredient;
 import com.erkutdemirhan.bugunneyesek.domain.Recipe;
 import com.erkutdemirhan.bugunneyesek.main.BugunNeYesek;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -31,10 +29,11 @@ public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.
     private String mUnavailableIng = "Mevcut olmayan malzemeler";
 
     private ArrayList<Recipe> mRecipeList;
+    private Context           mContext;
 
     public RecipesViewAdapter(Context context) {
-        ArrayList<Ingredient> userIngrList = BugunNeYesek.getInstance().getUserIngredientList();
-        mRecipeList = DbHelperFactory.getDatabaseHelper(context).getAllRecipesFromIngrList(userIngrList);
+        mContext    = context;
+        mRecipeList = new ArrayList<>();
     }
 
     @Override
@@ -47,14 +46,25 @@ public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Recipe recipe = mRecipeList.get(position);
+        ArrayList<Ingredient> userIngr = BugunNeYesek.getInstance().getUserIngredientList();
         holder.mRecipeTitleView    .setText(recipe.getRecipeName());
-        holder.mAvailableIngrView  .setText(mAvailableIngr);
-        holder.mUnavailableIngrView.setText(mUnavailableIng);
+        StringBuilder availableIngr   = new StringBuilder();
+        StringBuilder unavailableIngr = new StringBuilder();
+        for(Ingredient ingr:recipe.getIngredientList()) {
+            if(userIngr.contains(ingr)) {
+                availableIngr.append(ingr.getIngredientName());
+                availableIngr.append(", ");
+            } else {
+                unavailableIngr.append(ingr.getIngredientName());
+                unavailableIngr.append(", ");
+            }
+        }
+        holder.mAvailableIngrView  .setText(availableIngr.toString());
+        holder.mUnavailableIngrView.setText(unavailableIngr.toString());
         try {
             InputStream ims = BugunNeYesek.getInstance().getAssets().open("images/"+recipe.getImageFileName());
             Drawable d      = Drawable.createFromStream(ims, null);
             holder.mRecipeImageView.setImageDrawable(d);
-            ims.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,14 +75,15 @@ public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.
         return mRecipeList.size();
     }
 
-    public void removeAllRecipes() {
-        mRecipeList.clear();
-        notifyItemRangeChanged(0, getItemCount());
-    }
-
-    public void addRecipes(ArrayList<Recipe> recipes) {
-        mRecipeList.addAll(recipes);
-        notifyItemRangeChanged(0, getItemCount());
+    public void updateRecipes() {
+        ArrayList<Ingredient> userIngrList = BugunNeYesek.getInstance().getUserIngredientList();
+        int currentRecipeType              = BugunNeYesek.getInstance().getCurrentRecipeType();
+        if(currentRecipeType == -1) {
+            mRecipeList = DbHelperFactory.getDatabaseHelper(mContext).getAllRecipesFromIngrList(userIngrList);
+        } else {
+            mRecipeList = DbHelperFactory.getDatabaseHelper(mContext).getRecipesFromIngrListGivenType(userIngrList, currentRecipeType);
+        }
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -95,9 +106,7 @@ public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.
         public void onClick(View v) {
             Recipe recipe = mRecipeList.get(getPosition());
             Intent intent = new Intent(v.getContext(), RecipeActivity.class);
-            Bundle extras = new Bundle();
-            extras.putStringArray(RecipeActivity.RECIPE_TEXT_KEY, new String[] {recipe.getRecipeName(), recipe.getInstructions(), recipe.getImageFileName()});
-            intent.putExtras(extras);
+            intent.putExtra(Recipe.KEY, recipe);
             v.getContext().startActivity(intent);
         }
     }

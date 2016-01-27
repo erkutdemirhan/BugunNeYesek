@@ -12,6 +12,6 @@ public class DbHelperFactory {
     private DbHelperFactory() {}
 
     public static DbHelperInterface getDatabaseHelper(Context context) {
-        return new DbHelper(context);
+        return DbHelper.getsInstance(context);
     }
 }

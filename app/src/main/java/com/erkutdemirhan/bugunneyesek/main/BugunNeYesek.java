@@ -1,6 +1,9 @@
 package com.erkutdemirhan.bugunneyesek.main;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.erkutdemirhan.bugunneyesek.database.DbHelperFactory;
 import com.erkutdemirhan.bugunneyesek.domain.Ingredient;
 import com.erkutdemirhan.bugunneyesek.domain.RecipeType;
@@ -12,10 +15,14 @@ import java.util.ArrayList;
  */
 public class BugunNeYesek extends Application {
 
+    private static final String RECIPE_TYPE_PREF_KEY = "current_recipe_type";
     private static BugunNeYesek sInstance;
+
+
 
     private ArrayList<RecipeType> mRecipeTypeList;
     private ArrayList<Ingredient> mUserIngredientList;
+    private SharedPreferences     mRecipeTypePref;
 
     public static BugunNeYesek getInstance() {
         return sInstance;
@@ -26,7 +33,18 @@ public class BugunNeYesek extends Application {
         super.onCreate();
         sInstance = this;
         mRecipeTypeList     = DbHelperFactory.getDatabaseHelper(getApplicationContext()).getAllRecipeTypes();
+        mRecipeTypePref     = getSharedPreferences(RECIPE_TYPE_PREF_KEY, Context.MODE_PRIVATE);
         mUserIngredientList = new ArrayList<>();
+    }
+
+    public int getCurrentRecipeType() {
+        return mRecipeTypePref.getInt(RECIPE_TYPE_PREF_KEY, -1);
+    }
+
+    public void setCurrentRecipeType(int type) {
+        SharedPreferences.Editor editor = mRecipeTypePref.edit();
+        editor.putInt(RECIPE_TYPE_PREF_KEY, type);
+        editor.commit();
     }
 
     public ArrayList<RecipeType> getRecipeTypeList() {

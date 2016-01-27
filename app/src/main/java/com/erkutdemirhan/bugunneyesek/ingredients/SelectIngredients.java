@@ -33,35 +33,37 @@ import java.util.List;
  */
 public class SelectIngredients extends Fragment {
 
+    private static final String TAG = "SelectIngredients";
     private static final int RECIPE_TYPE_ITEM_INDEX = 0;
 
-    private RecyclerView           mRecyclerView;
-    private IngredientsViewAdapter mIngredientsViewAdapter;
+    private RecyclerView           mSelectedIngredientsView;
+    private IngredientsViewAdapter mSelectedIngredientsViewAdapter;
 
-    private Spinner mSpinner;
-    private ArrayAdapter<Ingredient> mSpinnerAdapter;
-    private List<Ingredient> mSpinnerList;
-
-    private Menu mRecipeTypeMenu;
+    private Spinner                  mIngredientListSpinner;
+    private ArrayAdapter<Ingredient> mIngredientListSpinnerAdapter;
+    private List<Ingredient>         mIngredientList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView =inflater.inflate(R.layout.select_ingredients, container, false);
+        View rootView                 = inflater.inflate(R.layout.select_ingredients, container, false);
+        int currentRecipeType         = BugunNeYesek.getInstance().getCurrentRecipeType();
+        mIngredientListSpinner        = (Spinner) rootView.findViewById(R.id.select_ingredients_spinner);
+        if(currentRecipeType == -1) {
+            mIngredientList           = DbHelperFactory.getDatabaseHelper(getActivity()).getAllIngredients();
+        } else {
+            mIngredientList           = DbHelperFactory.getDatabaseHelper(getActivity()).getIngredientsForRecipeType(currentRecipeType);
+        }
+        mIngredientListSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mIngredientList);
+        mIngredientListSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mIngredientListSpinner.setAdapter(mIngredientListSpinnerAdapter);
 
-        mSpinner        = (Spinner) rootView.findViewById(R.id.select_ingredients_spinner);
-        mSpinnerList    = new ArrayList<>();
-        mSpinnerList.addAll(DbHelperFactory.getDatabaseHelper(getActivity()).getIngredientsForRecipeType(1));
-        mSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mSpinnerList);
-        mSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(mSpinnerAdapter);
-
-        mRecyclerView   = (RecyclerView) rootView.findViewById(R.id.select_ingredients_recyclerview);
-        mRecyclerView.setHasFixedSize(true);
+        mSelectedIngredientsView      = (RecyclerView) rootView.findViewById(R.id.select_ingredients_recyclerview);
+        mSelectedIngredientsView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(layoutManager);
+        mSelectedIngredientsView.setLayoutManager(layoutManager);
 
-        mIngredientsViewAdapter = new IngredientsViewAdapter();
-        mRecyclerView.setAdapter(mIngredientsViewAdapter);
+        mSelectedIngredientsViewAdapter = new IngredientsViewAdapter();
+        mSelectedIngredientsView.setAdapter(mSelectedIngredientsViewAdapter);
 
         Button addIngredientsButton = (Button) rootView.findViewById(R.id.select_ingredients_button);
         addIngredientsButton.setOnClickListener(new View.OnClickListener() {
@@ -79,9 +81,9 @@ public class SelectIngredients extends Fragment {
      * Adds the ingredient that is selected by the user, into the ingredient list adapter.
      */
     private void addIngredient() {
-        Ingredient ingredient = (Ingredient) mSpinner.getSelectedItem();
+        Ingredient ingredient = (Ingredient) mIngredientListSpinner.getSelectedItem();
         if(ingredient != null) {
-            if(!mIngredientsViewAdapter.addIngredient(ingredient)) {
+            if(!mSelectedIngredientsViewAdapter.addIngredient(ingredient)) {
                 Toast.makeText(this.getActivity(), "Bu malzemeyi daha önce eklediniz!", Toast.LENGTH_SHORT).show();
             };
         }
@@ -92,25 +94,30 @@ public class SelectIngredients extends Fragment {
         super.onCreateOptionsMenu(menu, menuInflater);
         menuInflater.inflate(R.menu.select_ingredients_menu, menu);
         ArrayList<RecipeType> recipeTypes = BugunNeYesek.getInstance().getRecipeTypeList();
-        mRecipeTypeMenu                   = menu.getItem(RECIPE_TYPE_ITEM_INDEX).getSubMenu();
+        Menu recipeTypeMenu               = menu.getItem(RECIPE_TYPE_ITEM_INDEX).getSubMenu();
+        recipeTypeMenu.add(R.id.recipe_type_group, -1, Menu.NONE, R.string.option_all_recipes);
         for(RecipeType type: recipeTypes) {
-            mRecipeTypeMenu.add(R.id.recipe_type_group, Menu.FIRST + type.getTypeId(), type.getTypeId(), type.getTypeName());
+            recipeTypeMenu.add(R.id.recipe_type_group, type.getTypeId(), Menu.NONE, type.getTypeName());
         }
-        mRecipeTypeMenu.setGroupCheckable(R.id.recipe_type_group, true, true);
-        mRecipeTypeMenu.getItem(recipeTypes.get(0).getTypeId()).setChecked(true);
+        recipeTypeMenu.setGroupCheckable(R.id.recipe_type_group, true, true);
+        recipeTypeMenu.findItem(BugunNeYesek.getInstance().getCurrentRecipeType()).setChecked(true);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        ArrayList<RecipeType> recipeTypes = BugunNeYesek.getInstance().getRecipeTypeList();
-        for(RecipeType type:recipeTypes) {
-            if(Menu.FIRST + type.getTypeId() == id) {
-                Log.d("onOptionsItemSelected", "Recipe type: "+type.getTypeName());
-                mSpinnerList.clear();
-                mSpinnerList.addAll(DbHelperFactory.getDatabaseHelper(getActivity()).getIngredientsForRecipeType(type.getTypeId()));
-                mSpinnerAdapter.notifyDataSetChanged();
-                mIngredientsViewAdapter.removeAllIngredients();
+        for(RecipeType recipeType:BugunNeYesek.getInstance().getRecipeTypeList()) {
+            if(id == -1 || id == recipeType.getTypeId()) {
+                Log.d("onOptionsItemSelected", "Recipe type id: " + id);
+                mIngredientList.clear();
+                if(id == -1) {
+                    mIngredientList.addAll(DbHelperFactory.getDatabaseHelper(getActivity()).getAllIngredients());
+                } else {
+                    mIngredientList.addAll(DbHelperFactory.getDatabaseHelper(getActivity()).getIngredientsForRecipeType(id));
+                }
+                mIngredientListSpinnerAdapter.notifyDataSetChanged();
+                mSelectedIngredientsViewAdapter.removeAllIngredients();
+                BugunNeYesek.getInstance().setCurrentRecipeType(id);
                 item.setChecked(true);
                 return true;
             }

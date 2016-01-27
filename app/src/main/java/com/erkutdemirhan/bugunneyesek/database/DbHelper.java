@@ -24,7 +24,16 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
     private static final String DATABASE_NAME    = "recipe_database.db";
     private static final int    DATABASE_VERSION = 1;
 
-    public DbHelper(Context context) {
+    private static DbHelper sInstance;
+
+    public static DbHelper getsInstance(Context context) {
+        if(sInstance == null) {
+            sInstance = new DbHelper(context);
+        }
+        return sInstance;
+    }
+
+    private DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -97,6 +106,7 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
             String amount   = "";
             ingrList.add(new Ingredient(id, name, amount));
         }
+        c.close();
         Collections.sort(ingrList);
         return ingrList;
     }
@@ -105,9 +115,10 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
     public ArrayList<Ingredient> getIngredientsForRecipeType(int recipeType) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT ingredients.id, ingredients.name ");
-        sb.append("FROM ingredients_type INNER JOIN ingredients ");
-        sb.append("ON ingredients_type.ingr_id=ingredients.id ");
-        sb.append("WHERE ingredients_type.type_id=?");
+        sb.append("FROM recipes INNER JOIN recipeingredients INNER JOIN ingredients ");
+        sb.append("ON recipes.id=recipeingredients.recipe_id AND recipeingredients.ingr_id=ingredients.id ");
+        sb.append("WHERE recipes.type=? ");
+        sb.append("GROUP BY ingredients.id");
         ArrayList<Ingredient> ingrList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor c          = db.rawQuery(sb.toString(), new String[]{String.valueOf(recipeType)});
@@ -117,6 +128,7 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
             String amount = "";
             ingrList.add(new Ingredient(id, name, amount));
         }
+        c.close();
         Collections.sort(ingrList);
         return ingrList;
     }
@@ -134,6 +146,7 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
             String name = c.getString(c.getColumnIndex("name"));
             recipeTypeList.add(new RecipeType(id, name));
         }
+        c.close();
         return recipeTypeList;
     }
 
@@ -149,6 +162,7 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
             RecipeType recipeType = BugunNeYesek.getInstance().getRecipeTypeById(type);
             recipeList.add(new Recipe(id, name, instructions, imageName, recipeType, ingredientList));
         }
+        c.close();
         return recipeList;
     }
 
@@ -167,6 +181,7 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
             String amount = c.getString(c.getColumnIndex("amount"));
             ingrList.add(new Ingredient(id, name, amount));
         }
+        c.close();
         return ingrList;
     }
 

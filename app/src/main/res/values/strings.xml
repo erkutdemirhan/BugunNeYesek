@@ -19,10 +19,8 @@
     <string name="alert_download_message">Uygulamadan faydalanabilmeniz için, sadece bir defaya mahsus olmak üzere 1 MB boyutunda içeriğin indirilmesi gerekmektedir. Devam etmek istiyor musunuz?</string>
     <string name="alert_internet_title">Internet Bağlantısı Yok</string>
     <string name="alert_internet_message">Uygulama içeriğini indirmek için internet bağlantısı gerekmektedir. Lütfen internete bağlandıktan uygulamayı tekrar başlatınız.</string>
-    <string name="option_recipe_type_title">Tarif türü</string>
 
-    <string name="yes">Evet</string>
-    <string name="no">Hayır</string>
-    <string name="ok">Tamam</string>
+    <string name="option_recipe_type_title">Tarif türü</string>
+    <string name="option_all_recipes">Tüm tarifler</string>
 
 </resources>

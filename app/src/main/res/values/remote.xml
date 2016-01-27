@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item name="remote_url" type="string">https://dl.dropboxusercontent.com/u/46607299/BugunNeYesek/</item>
-    <item name="remote_image_folder" type="string">Images/</item>
-    <item name="remote_recipe_file_name" type="string">recipes.json</item>
-</resources>

@@ -1,9 +1,11 @@
 package com.erkutdemirhan.bugunneyesek.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by Erkut on 26/01/16.
  */
-public class RecipeType {
+public class RecipeType implements Serializable {
 
     private final int    mTypeId;
     private final String mTypeName;
