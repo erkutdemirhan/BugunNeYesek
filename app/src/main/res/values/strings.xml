@@ -2,8 +2,6 @@
 <resources>
 
     <string name="app_name">Bugün Ne Yesek</string>
-    <string name="select_ingredients_title">Malzeme Seçme</string>
-    <string name="recipes_list_title">Tarif Listesi</string>
     <string name="select_ingredients_button">Malzeme Ekle</string>
     <string name="recipe_ingredients_title">Malzemeler:</string>
     <string name="recipe_content_title">Yapılışı:</string>
@@ -22,5 +20,12 @@
 
     <string name="option_recipe_type_title">Tarif türü</string>
     <string name="option_all_recipes">Tüm tarifler</string>
+
+    <string name="drawer_list_allrecipes">Tüm tarifler</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+    <string name="tab_select_ingr">Malzeme Seçme</string>
+    <string name="tab_recipe_list">Tarif Listesi</string>
 
 </resources>

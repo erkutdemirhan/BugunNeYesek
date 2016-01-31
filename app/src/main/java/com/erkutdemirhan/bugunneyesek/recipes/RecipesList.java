@@ -3,6 +3,7 @@ package com.erkutdemirhan.bugunneyesek.recipes;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,7 +29,7 @@ public class RecipesList extends Fragment {
         Log.d(TAG, "onCreateView");
         mSelectedRecipesView = (RecyclerView) rootView.findViewById(R.id.recipes_recyclerview);
         mSelectedRecipesView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         mSelectedRecipesView.setLayoutManager(layoutManager);
         mSelectedRecipesViewAdapter              = new RecipesViewAdapter(getActivity());
         mSelectedRecipesView.setAdapter(mSelectedRecipesViewAdapter);

@@ -18,8 +18,6 @@ public class BugunNeYesek extends Application {
     private static final String RECIPE_TYPE_PREF_KEY = "current_recipe_type";
     private static BugunNeYesek sInstance;
 
-
-
     private ArrayList<RecipeType> mRecipeTypeList;
     private ArrayList<Ingredient> mUserIngredientList;
     private SharedPreferences     mRecipeTypePref;

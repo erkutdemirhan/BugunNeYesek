@@ -159,8 +159,7 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
             String instructions   = c.getString(c.getColumnIndex("instructions"));
             String imageName      = c.getString(c.getColumnIndex("image_name"));
             ArrayList<Ingredient> ingredientList = getRecipeIngredients(id);
-            RecipeType recipeType = BugunNeYesek.getInstance().getRecipeTypeById(type);
-            recipeList.add(new Recipe(id, name, instructions, imageName, recipeType, ingredientList));
+            recipeList.add(new Recipe(id, name, instructions, imageName, type, ingredientList));
         }
         c.close();
         return recipeList;

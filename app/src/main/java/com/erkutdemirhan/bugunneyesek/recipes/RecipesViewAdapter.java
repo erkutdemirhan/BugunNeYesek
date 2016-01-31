@@ -38,7 +38,7 @@ public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v        = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipes_item, parent, false);
+        View v        = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -46,21 +46,21 @@ public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Recipe recipe = mRecipeList.get(position);
-        ArrayList<Ingredient> userIngr = BugunNeYesek.getInstance().getUserIngredientList();
+//        ArrayList<Ingredient> userIngr = BugunNeYesek.getInstance().getUserIngredientList();
         holder.mRecipeTitleView    .setText(recipe.getRecipeName());
-        StringBuilder availableIngr   = new StringBuilder();
-        StringBuilder unavailableIngr = new StringBuilder();
-        for(Ingredient ingr:recipe.getIngredientList()) {
-            if(userIngr.contains(ingr)) {
-                availableIngr.append(ingr.getIngredientName());
-                availableIngr.append(", ");
-            } else {
-                unavailableIngr.append(ingr.getIngredientName());
-                unavailableIngr.append(", ");
-            }
-        }
-        holder.mAvailableIngrView  .setText(availableIngr.toString());
-        holder.mUnavailableIngrView.setText(unavailableIngr.toString());
+//        StringBuilder availableIngr   = new StringBuilder();
+//        StringBuilder unavailableIngr = new StringBuilder();
+//        for(Ingredient ingr:recipe.getIngredientList()) {
+//            if(userIngr.contains(ingr)) {
+//                availableIngr.append(ingr.getIngredientName());
+//                availableIngr.append(", ");
+//            } else {
+//                unavailableIngr.append(ingr.getIngredientName());
+//                unavailableIngr.append(", ");
+//            }
+//        }
+//        holder.mAvailableIngrView  .setText(availableIngr.toString());
+//        holder.mUnavailableIngrView.setText(unavailableIngr.toString());
         try {
             InputStream ims = BugunNeYesek.getInstance().getAssets().open("images/"+recipe.getImageFileName());
             Drawable d      = Drawable.createFromStream(ims, null);
@@ -95,10 +95,10 @@ public class RecipesViewAdapter extends RecyclerView.Adapter<RecipesViewAdapter.
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mRecipeTitleView     = (TextView) itemView.findViewById(R.id.recipe_title);
-            mAvailableIngrView   = (TextView) itemView.findViewById(R.id.available_ingredients);
-            mUnavailableIngrView = (TextView) itemView.findViewById(R.id.unavailable_ingredients);
-            mRecipeImageView     = (ImageView) itemView.findViewById(R.id.recipe_picture);
+            mRecipeTitleView     = (TextView)  itemView.findViewById(R.id.recipeitem_name);
+            //mAvailableIngrView   = (TextView)  itemView.findViewById(R.id.recipeitem_availableingr);
+            //mUnavailableIngrView = (TextView)  itemView.findViewById(R.id.recipeitem_unavailableingr);
+            mRecipeImageView     = (ImageView) itemView.findViewById(R.id.recipeitem_image);
             itemView.setOnClickListener(this);
         }
 

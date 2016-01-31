@@ -1,9 +1,11 @@
 package com.erkutdemirhan.bugunneyesek.main;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.erkutdemirhan.bugunneyesek.R;
 import com.erkutdemirhan.bugunneyesek.ingredients.SelectIngredients;
 import com.erkutdemirhan.bugunneyesek.recipes.RecipesList;
 
@@ -12,13 +14,12 @@ import com.erkutdemirhan.bugunneyesek.recipes.RecipesList;
  */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private CharSequence mTitles[];
-    private int mNumOfTabs;
+    private CharSequence[] mTitles;
 
-    public ViewPagerAdapter(FragmentManager fm, CharSequence titles[], int numbOfTabs) {
+    public ViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
-        this.mTitles = titles;
-        this.mNumOfTabs = numbOfTabs;
+        this.mTitles    = new CharSequence[] {context.getString(R.string.tab_select_ingr),
+                                           context.getString(R.string.tab_recipe_list) };
     }
 
     @Override
@@ -39,6 +40,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return mNumOfTabs;
+        return mTitles.length;
     }
 }

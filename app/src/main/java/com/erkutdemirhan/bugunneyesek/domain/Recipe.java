@@ -15,19 +15,19 @@ public class Recipe implements Comparable<Recipe>, Serializable {
     private final String                mRecipeName;
     private final String                mInstructions;
     private final String                mImageFileName;
-    private final RecipeType            mRecipeType;
+    private final int                   mRecipeTypeId;
     private final ArrayList<Ingredient> mIngredientList;
 
     public Recipe(int id,
                   String name,
                   String instructions,
                   String imageFileName,
-                  RecipeType type,
+                  int type,
                   ArrayList<Ingredient> ingredientList) {
         mRecipeId       = id;
         mRecipeName     = name;
         mInstructions   = instructions;
-        mRecipeType     = type;
+        mRecipeTypeId   = type;
         mImageFileName  = imageFileName;
         mIngredientList = ingredientList;
     }
@@ -48,8 +48,8 @@ public class Recipe implements Comparable<Recipe>, Serializable {
         return mImageFileName;
     }
 
-    public RecipeType getRecipeType() {
-        return mRecipeType;
+    public int getRecipeTypeId() {
+        return mRecipeTypeId;
     }
 
     public ArrayList<Ingredient> getIngredientList() {
