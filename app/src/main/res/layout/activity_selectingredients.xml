@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/selectingredients_drawer"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
+
+    <LinearLayout
+        android:layout_width  = "match_parent"
+        android:layout_height = "match_parent"
+        android:orientation   = "vertical" >
+
+        <android.support.v7.widget.Toolbar
+            android:id            = "@+id/selectingredients_toolbar"
+            android:layout_width  = "match_parent"
+            android:layout_height = "wrap_content"
+            android:background    = "@color/primary"
+            android:minHeight     = "?attr/actionBarSize"
+            android:theme         = "@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+        </android.support.v7.widget.Toolbar>
+
+        <RelativeLayout
+            android:layout_width  = "match_parent"
+            android:layout_height = "match_parent"
+            android:layout_margin = "@dimen/activity_horizontal_margin">
+
+            <android.support.design.widget.TextInputLayout
+                android:id                     = "@+id/selectingredients_textinput"
+                android:layout_width           = "match_parent"
+                android:layout_height          = "wrap_content"
+                android:alpha                  = "0.6"
+                android:background             = "#5c1b1b1b"
+                android:layout_alignParentLeft = "true"
+                android:focusable              = "true"
+                android:focusableInTouchMode   = "true" >
+                <AutoCompleteTextView
+                    android:id            = "@+id/selectingredients_autocomplete"
+                    android:layout_width  = "match_parent"
+                    android:layout_height = "match_parent"
+                    android:color         = "@color/primary"
+                    android:inputType     = "text"
+                    android:singleLine    = "true"
+                    android:hint          = "@string/selectingredients_autocompletehint" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id             = "@+id/selectingredients_recyclerview"
+                android:layout_below   = "@id/selectingredients_textinput"
+                android:layout_height  = "wrap_content"
+                android:layout_width   = "match_parent"
+                android:scrollbars     = "vertical" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id            = "@+id/selectingredients_showrecipes"
+                android:layout_height = "wrap_content"
+                android:layout_width  = "wrap_content"
+                android:src           = "@drawable/ic_book_open"
+                android:tint          = "@color/white"
+                android:scaleType     = "center"
+                app:borderWidth       = "0dp"
+                android:elevation     = "@dimen/elevation"
+                android:layout_alignParentBottom = "true"
+                android:layout_alignParentRight  = "true">
+
+            </android.support.design.widget.FloatingActionButton>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id             = "@+id/selectingredients_navigationview"
+        android:layout_width   = "wrap_content"
+        android:layout_height  = "wrap_content"
+        android:layout_gravity = "start" >
+        <LinearLayout
+            android:layout_width  = "match_parent"
+            android:layout_height = "match_parent"
+            android:orientation   = "vertical" >
+            <include layout="@layout/drawer_header" />
+            <ListView
+                android:id             = "@+id/selectingredients_drawerlistview"
+                android:layout_height  = "match_parent"
+                android:layout_width   = "match_parent" />
+        </LinearLayout>
+    </android.support.design.widget.NavigationView>
+
+</android.support.v4.widget.DrawerLayout>

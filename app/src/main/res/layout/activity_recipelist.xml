@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id            = "@+id/recipelist_drawer"
+    android:layout_height = "match_parent"
+    android:layout_width  = "match_parent" >
+
+    <RelativeLayout
+        android:layout_width  = "match_parent"
+        android:layout_height = "match_parent" >
+
+        <android.support.v7.widget.Toolbar
+            android:id            = "@+id/recipelist_toolbar"
+            android:layout_width  = "match_parent"
+            android:layout_height = "wrap_content"
+            android:background    = "@color/primary"
+            android:minHeight     = "?attr/actionBarSize"
+            android:theme         = "@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id            = "@+id/recipelist_recyclerview"
+            android:layout_width  = "match_parent"
+            android:layout_height = "match_parent"
+            android:layout_below  = "@id/recipelist_toolbar"
+            android:layout_margin = "20dp"
+            android:scrollbars    = "vertical" />
+
+    </RelativeLayout>
+
+</android.support.v4.widget.DrawerLayout>

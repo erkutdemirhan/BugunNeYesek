@@ -1,4 +1,4 @@
-package com.erkutdemirhan.bugunneyesek.main;
+package com.erkutdemirhan.bugunneyesek.application;
 
 import android.app.Application;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.erkutdemirhan.bugunneyesek.utils;
+package com.erkutdemirhan.bugunneyesek.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

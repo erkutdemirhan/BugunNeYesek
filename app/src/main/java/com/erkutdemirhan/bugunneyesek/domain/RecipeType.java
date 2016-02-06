@@ -37,4 +37,9 @@ public class RecipeType implements Serializable {
         result = result * 31 + getTypeId();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return getTypeName();
+    }
 }

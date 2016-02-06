@@ -2,30 +2,23 @@
 <resources>
 
     <string name="app_name">Bugün Ne Yesek</string>
-    <string name="select_ingredients_button">Malzeme Ekle</string>
-    <string name="recipe_ingredients_title">Malzemeler:</string>
-    <string name="recipe_content_title">Yapılışı:</string>
-    <string name="title_activity_recipe_download_screen">RecipeDownloadScreen</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
-    <string name="progress_download_json">Tarif dosyası indiriliyor...</string>
-    <string name="progress_create_recipe_list">Tarif listesi oluşturuluyor...</string>
-    <string name="progress_download_images">Görseller indiriliyor...</string>
-
-    <string name="alert_download_title">Uygulama İçeriği İndirme</string>
-    <string name="alert_download_message">Uygulamadan faydalanabilmeniz için, sadece bir defaya mahsus olmak üzere 1 MB boyutunda içeriğin indirilmesi gerekmektedir. Devam etmek istiyor musunuz?</string>
-    <string name="alert_internet_title">Internet Bağlantısı Yok</string>
-    <string name="alert_internet_message">Uygulama içeriğini indirmek için internet bağlantısı gerekmektedir. Lütfen internete bağlandıktan uygulamayı tekrar başlatınız.</string>
-
-    <string name="option_recipe_type_title">Tarif türü</string>
-    <string name="option_all_recipes">Tüm tarifler</string>
-
-    <string name="drawer_list_allrecipes">Tüm tarifler</string>
+    <string name="all_recipes">Tüm tarifler</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
-    <string name="tab_select_ingr">Malzeme Seçme</string>
-    <string name="tab_recipe_list">Tarif Listesi</string>
+    <string name="show_recipes">Tarifleri Sırala</string>
+    <string name="selectingredients_autocompletehint">Elinizdeki Malzemeleri Ekleyin</string>
+    <string name="selectingredients_toolbar_title">Malzeme Seçme</string>
+    <string name="selectingredients_already_selected_ingr">Bu Malzemeyi Daha Önce Eklediniz!</string>
+    <string name="selectingredients_alert_addingr">Sıralı tarifleri görebilmek için malzeme eklemelisiniz!</string>
+
+    <string name="recipelist_toolbar_title_ingr">Sıralı Tarif Listesi</string>
+
+    <string name="ingredients">Malzemeler</string>
+    <string name="instructions">Yapılışı</string>
+    <string name="available_ingredients">   Mevcut Malzemeler</string>
+    <string name="unavailable_ingredients"> Mevcut Olmayan Malzemeler</string>
 
 </resources>

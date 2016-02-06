@@ -4,15 +4,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.util.Log;
 
 import com.erkutdemirhan.bugunneyesek.domain.Ingredient;
 import com.erkutdemirhan.bugunneyesek.domain.Recipe;
 import com.erkutdemirhan.bugunneyesek.domain.RecipeType;
-import com.erkutdemirhan.bugunneyesek.main.BugunNeYesek;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 
