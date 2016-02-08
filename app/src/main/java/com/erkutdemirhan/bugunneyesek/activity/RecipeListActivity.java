@@ -1,9 +1,11 @@
 package com.erkutdemirhan.bugunneyesek.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -76,10 +78,15 @@ public class RecipeListActivity extends AppCompatActivity {
     }
 
     private void initRecipeList() {
-        RecyclerView recipeListView               = (RecyclerView) findViewById(R.id.recipelist_recyclerview);
+        RecyclerView recipeListView                = (RecyclerView) findViewById(R.id.recipelist_recyclerview);
         recipeListView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager  = new GridLayoutManager(this, 2);
-        recipeListView.setLayoutManager(layoutManager);
+        RecyclerView.LayoutManager layoutPortrait  = new GridLayoutManager(this, 2);
+        RecyclerView.LayoutManager layoutLandscape = new GridLayoutManager(this, 3);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            recipeListView.setLayoutManager(layoutPortrait);
+        } else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            recipeListView.setLayoutManager(layoutLandscape);
+        }
         ArrayList<Recipe> recipeList = new ArrayList<>();
         if(mIntent.hasExtra(RECIPE_TYPE_KEY)) {
             RecipeType type  = (RecipeType) mIntent.getSerializableExtra(RECIPE_TYPE_KEY);

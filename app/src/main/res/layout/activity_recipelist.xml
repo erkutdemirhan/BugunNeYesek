@@ -7,7 +7,8 @@
 
     <RelativeLayout
         android:layout_width  = "match_parent"
-        android:layout_height = "match_parent" >
+        android:layout_height = "match_parent"
+        android:background    = "@color/primary_background">
 
         <android.support.v7.widget.Toolbar
             android:id            = "@+id/recipelist_toolbar"
@@ -22,7 +23,7 @@
             android:layout_width  = "match_parent"
             android:layout_height = "match_parent"
             android:layout_below  = "@id/recipelist_toolbar"
-            android:layout_margin = "20dp"
+            android:layout_margin = "@dimen/recipelist_margin"
             android:scrollbars    = "vertical" />
 
     </RelativeLayout>
