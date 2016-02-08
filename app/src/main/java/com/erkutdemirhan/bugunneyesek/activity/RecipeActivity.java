@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
@@ -29,24 +31,46 @@ public class RecipeActivity extends AppCompatActivity {
     private static final String TAG          = "RecipeActivity";
 
     private CollapsingToolbarLayout mCollapsingToolbar;
+    private Intent                  mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
-        Intent intent = getIntent();
-        Recipe recipe = (Recipe) intent.getSerializableExtra(RecipeActivity.RECIPE_KEY);
+        mIntent       = getIntent();
+        Recipe recipe = (Recipe) mIntent.getSerializableExtra(RecipeActivity.RECIPE_KEY);
         initToolbar(recipe);
         initImage(recipe);
-        ArrayList<Ingredient> selectedIngredients = (ArrayList<Ingredient>) intent.getSerializableExtra(RecipeActivity.INGR_LIST_KEY);
+        ArrayList<Ingredient> selectedIngredients = (ArrayList<Ingredient>) mIntent.getSerializableExtra(RecipeActivity.INGR_LIST_KEY);
         initRecipeContents(recipe, selectedIngredients);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(this, RecipeListActivity.class);
+                if(mIntent.hasExtra(RecipeActivity.INGR_LIST_KEY)) {
+                    intent.putExtra(RecipeListActivity.INGR_LIST_KEY, mIntent.getSerializableExtra(RecipeActivity.INGR_LIST_KEY));
+                } else if(mIntent.hasExtra(RecipeActivity.RECIPE_KEY)) {
+                    Recipe recipe = (Recipe) mIntent.getSerializableExtra(RecipeActivity.RECIPE_KEY);
+                    intent.putExtra(RecipeListActivity.RECIPE_TYPE_KEY, BugunNeYesek.getInstance().getRecipeTypeById(recipe.getRecipeTypeId()));
+                }
+                NavUtils.navigateUpTo(this, intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void initToolbar(Recipe recipe) {
         Toolbar toolBar    = (Toolbar) findViewById(R.id.recipe_toolbar);
         mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.recipe_collapsingtoolbar);
-        setSupportActionBar(toolBar);
-        mCollapsingToolbar.setTitle(recipe.getRecipeName());
+        if(toolBar != null && mCollapsingToolbar != null) {
+            setSupportActionBar(toolBar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            mCollapsingToolbar.setTitle(recipe.getRecipeName());
+        }
     }
 
     private void initImage(Recipe recipe) {
