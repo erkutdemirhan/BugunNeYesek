@@ -9,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.erkutdemirhan.bugunneyesek.R;
@@ -30,7 +31,7 @@ public class RecipeListActivity extends AppCompatActivity {
 
     private static final String TAG = "RecipeListActivity";
 
-    private Intent                mIntent;
+    private Bundle                mActivityState;
     private Toolbar               mToolbar;
     private RecipeListViewAdapter mRecipeListAdapter;
 
@@ -38,20 +39,36 @@ public class RecipeListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipelist);
-        mIntent = getIntent();
+        if(savedInstanceState != null) {
+            mActivityState = savedInstanceState;
+        } else {
+            mActivityState = getIntent().getExtras();
+        }
         initToolbar();
         initRecipeList();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putAll(mActivityState);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.recipelist_menu, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent(this, SelectIngredientsActivity.class);
-                if(mIntent.hasExtra(RecipeListActivity.INGR_LIST_KEY)) {
-                    intent.putExtra(RecipeListActivity.INGR_LIST_KEY, mIntent.getSerializableExtra(RecipeListActivity.INGR_LIST_KEY));
-                }
-                NavUtils.navigateUpTo(this, intent);
+                finish();
+                return true;
+            case R.id.recipelist_showshoppinglist:
+                Intent intent = new Intent(this, ShoppingListActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -61,13 +78,13 @@ public class RecipeListActivity extends AppCompatActivity {
     private void initToolbar() {
         mToolbar            = (Toolbar) findViewById(R.id.recipelist_toolbar);
         String toolbarTitle = "";
-        if(mIntent.hasExtra(RECIPE_TYPE_KEY)) {
+        if(mActivityState.containsKey(RecipeListActivity.RECIPE_TYPE_KEY)) {
             toolbarTitle    = getString(R.string.all_recipes);
-            RecipeType type = (RecipeType) mIntent.getSerializableExtra(RECIPE_TYPE_KEY);
+            RecipeType type = (RecipeType) mActivityState.getSerializable(RecipeListActivity.RECIPE_TYPE_KEY);
             toolbarTitle    = (type.getTypeId()==-1) ?
                     toolbarTitle:
                     toolbarTitle + " (" + type.getTypeName() + ")" ;
-        } else if(mIntent.hasExtra(INGR_LIST_KEY)) {
+        } else if(mActivityState.containsKey(RecipeListActivity.INGR_LIST_KEY)) {
             toolbarTitle    = getString(R.string.recipelist_toolbar_title_ingr);
         }
         if(mToolbar != null) {
@@ -88,16 +105,16 @@ public class RecipeListActivity extends AppCompatActivity {
             recipeListView.setLayoutManager(layoutLandscape);
         }
         ArrayList<Recipe> recipeList = new ArrayList<>();
-        if(mIntent.hasExtra(RECIPE_TYPE_KEY)) {
-            RecipeType type  = (RecipeType) mIntent.getSerializableExtra(RECIPE_TYPE_KEY);
+        if(mActivityState.containsKey(RecipeListActivity.RECIPE_TYPE_KEY)) {
+            RecipeType type  = (RecipeType) mActivityState.getSerializable(RecipeListActivity.RECIPE_TYPE_KEY);
             if(type.getTypeId() == -1) {
                 recipeList   = DbHelperFactory.getDatabaseHelper(this).getAllRecipes();
             } else {
                 recipeList   = DbHelperFactory.getDatabaseHelper(this).getRecipesOfGivenType(type.getTypeId());
             }
             mRecipeListAdapter = new RecipeListViewAdapter(recipeList, null);
-        } else if(mIntent.hasExtra(INGR_LIST_KEY)) {
-            ArrayList<Ingredient> ingrList = (ArrayList<Ingredient>) mIntent.getSerializableExtra(INGR_LIST_KEY);
+        } else if(mActivityState.containsKey(RecipeListActivity.INGR_LIST_KEY)) {
+            ArrayList<Ingredient> ingrList = (ArrayList<Ingredient>) mActivityState.getSerializable(RecipeListActivity.INGR_LIST_KEY);
             recipeList                     = DbHelperFactory.getDatabaseHelper(this).getAllRecipesFromIngrList(ingrList);
             mRecipeListAdapter             = new RecipeListViewAdapter(recipeList, ingrList);
         }

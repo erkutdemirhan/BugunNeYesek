@@ -39,7 +39,6 @@ public class SelectIngredientsActivity extends AppCompatActivity {
     private static final String TAG                  = "SelectIngredients";
     private static final String SELECTED_INGREDIENTS = "selected_ingredients";
 
-    private Intent                    mIntent;
     private Toolbar                   mToolbar;
     private AutoCompleteTextView      mTextView;
     private TextInputLayout           mTextInputLayout;
@@ -49,7 +48,6 @@ public class SelectIngredientsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectingredients);
-        mIntent = getIntent();
         getWindow().setBackgroundDrawableResource(R.drawable.ingredients_background);
         initToolbar();
         initDrawer();
@@ -126,9 +124,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
                 R.string.drawer_close);
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();
-        ArrayList<RecipeType> allRecipeTypes        = new ArrayList<>();
-        allRecipeTypes.add(new RecipeType(-1, getString(R.string.all_recipes)));
-        allRecipeTypes.addAll(BugunNeYesek.getInstance().getRecipeTypeList());
+        ArrayList<RecipeType> allRecipeTypes        = BugunNeYesek.getInstance().getRecipeTypeList();
         ArrayAdapter<RecipeType> drawerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, allRecipeTypes);
         ListView drawerListView                     = (ListView) findViewById(R.id.selectingredients_drawerlistview);
         drawerListView.setAdapter(drawerArrayAdapter);
@@ -166,9 +162,6 @@ public class SelectIngredientsActivity extends AppCompatActivity {
         ingredientListView.setLayoutManager(layoutManager);
         if(savedInstanceState != null && savedInstanceState.containsKey(SELECTED_INGREDIENTS)) {
             ArrayList<Ingredient> selectedIngredientList = (ArrayList<Ingredient>) savedInstanceState.getSerializable(SELECTED_INGREDIENTS);
-            mSelectedIngredientsAdapter                  = new IngredientListViewAdapter(selectedIngredientList);
-        } else if (mIntent.hasExtra(RecipeListActivity.INGR_LIST_KEY)) {
-            ArrayList<Ingredient> selectedIngredientList = (ArrayList<Ingredient>) mIntent.getSerializableExtra(RecipeListActivity.INGR_LIST_KEY);
             mSelectedIngredientsAdapter                  = new IngredientListViewAdapter(selectedIngredientList);
         } else {
             mSelectedIngredientsAdapter                  = new IngredientListViewAdapter();

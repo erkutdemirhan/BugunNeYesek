@@ -88,6 +88,11 @@ public class IngredientListViewAdapter extends RecyclerView.Adapter<IngredientLi
         return true;
     }
 
+    public void clearIngredientList() {
+        mIngredientList.clear();
+        notifyDataSetChanged();
+    }
+
     public ArrayList<Ingredient> getIngredientList() {
         return mIngredientList;
     }

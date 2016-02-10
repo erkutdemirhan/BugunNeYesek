@@ -4,12 +4,13 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.erkutdemirhan.bugunneyesek.R;
 import com.erkutdemirhan.bugunneyesek.domain.Ingredient;
@@ -31,39 +32,54 @@ public class RecipeActivity extends AppCompatActivity {
     private static final String TAG          = "RecipeActivity";
 
     private CollapsingToolbarLayout mCollapsingToolbar;
-    private Intent                  mIntent;
+    private Bundle                  mActivityState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
-        mIntent       = getIntent();
-        Recipe recipe = (Recipe) mIntent.getSerializableExtra(RecipeActivity.RECIPE_KEY);
-        initToolbar(recipe);
-        initImage(recipe);
-        ArrayList<Ingredient> selectedIngredients = (ArrayList<Ingredient>) mIntent.getSerializableExtra(RecipeActivity.INGR_LIST_KEY);
-        initRecipeContents(recipe, selectedIngredients);
+        if(savedInstanceState != null) {
+            mActivityState = savedInstanceState;
+        } else {
+            mActivityState = getIntent().getExtras();
+        }
+        initToolbar();
+        initImage();
+        initRecipeContents();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.recipe_menu, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent(this, RecipeListActivity.class);
-                if(mIntent.hasExtra(RecipeActivity.INGR_LIST_KEY)) {
-                    intent.putExtra(RecipeListActivity.INGR_LIST_KEY, mIntent.getSerializableExtra(RecipeActivity.INGR_LIST_KEY));
-                } else if(mIntent.hasExtra(RecipeActivity.RECIPE_KEY)) {
-                    Recipe recipe = (Recipe) mIntent.getSerializableExtra(RecipeActivity.RECIPE_KEY);
-                    intent.putExtra(RecipeListActivity.RECIPE_TYPE_KEY, BugunNeYesek.getInstance().getRecipeTypeById(recipe.getRecipeTypeId()));
-                }
-                NavUtils.navigateUpTo(this, intent);
+                finish();
+                return true;
+            case R.id.recipeactivity_showshoppinglist:
+                Intent intent = new Intent(this, ShoppingListActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.recipeactivity_addshoppinglist:
+                addMissingIngrToShoppingList();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void initToolbar(Recipe recipe) {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putAll(mActivityState);
+    }
+
+    private void initToolbar() {
+        Recipe recipe      = (Recipe) mActivityState.getSerializable(RecipeActivity.RECIPE_KEY);
         Toolbar toolBar    = (Toolbar) findViewById(R.id.recipe_toolbar);
         mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.recipe_collapsingtoolbar);
         if(toolBar != null && mCollapsingToolbar != null) {
@@ -73,7 +89,8 @@ public class RecipeActivity extends AppCompatActivity {
         }
     }
 
-    private void initImage(Recipe recipe) {
+    private void initImage() {
+        Recipe recipe         = (Recipe) mActivityState.getSerializable(RecipeActivity.RECIPE_KEY);
         ImageView recipeImage = (ImageView) findViewById(R.id.recipe_image);
         try {
             InputStream ims = BugunNeYesek.getInstance().getAssets().open("images/" + recipe.getImageFileName());
@@ -85,10 +102,12 @@ public class RecipeActivity extends AppCompatActivity {
         }
     }
 
-    private void initRecipeContents(Recipe recipe, ArrayList<Ingredient> selectedIngredients) {
-        ArrayList<Ingredient> ingredientList = recipe.getIngredientList();
-        StringBuilder availableIngr          = new StringBuilder();
-        StringBuilder unavailableIngr        = new StringBuilder();
+    private void initRecipeContents() {
+        Recipe recipe                             = (Recipe) mActivityState.getSerializable(RecipeActivity.RECIPE_KEY);
+        ArrayList<Ingredient> selectedIngredients = (ArrayList<Ingredient>) mActivityState.getSerializable(RecipeActivity.INGR_LIST_KEY);
+        ArrayList<Ingredient> ingredientList      = recipe.getIngredientList();
+        StringBuilder availableIngr               = new StringBuilder();
+        StringBuilder unavailableIngr             = new StringBuilder();
         for(Ingredient ingr:ingredientList) {
             String line = ingr.getIngredientName();
             line       += (ingr.getIngredientAmount().equalsIgnoreCase("")) ? "\n" : " (" + ingr.getIngredientAmount() + ")\n";
@@ -106,5 +125,22 @@ public class RecipeActivity extends AppCompatActivity {
         availableIngrText.setText(availableIngr.toString());
         unavailableIngrText.setText(unavailableIngr.toString());
         instructionText.setText(recipe.getInstructions());
+    }
+
+    private void addMissingIngrToShoppingList() {
+        ArrayList<Ingredient> missingIngredients   = new ArrayList<>();
+        Recipe recipe                              = (Recipe) mActivityState.getSerializable(RecipeActivity.RECIPE_KEY);
+        ArrayList<Ingredient> availableIngredients = (ArrayList<Ingredient>) mActivityState.getSerializable(RecipeActivity.INGR_LIST_KEY);
+        if(availableIngredients != null) {
+            for (Ingredient ingr : recipe.getIngredientList()) {
+                if (!availableIngredients.contains(ingr)) {
+                    missingIngredients.add(ingr);
+                }
+            }
+        } else {
+            missingIngredients = recipe.getIngredientList();
+        }
+        BugunNeYesek.getInstance().addToShoppingList(missingIngredients);
+        Toast.makeText(this, getString(R.string.add_shopping_list_message), Toast.LENGTH_SHORT).show();
     }
 }

@@ -8,7 +8,9 @@
     <LinearLayout
         android:layout_width  = "match_parent"
         android:layout_height = "match_parent"
-        android:orientation   = "vertical" >
+        android:orientation   = "vertical"
+        android:focusable     = "true"
+        android:focusableInTouchMode = "true" >
 
         <android.support.v7.widget.Toolbar
             android:id            = "@+id/selectingredients_toolbar"
@@ -28,16 +30,13 @@
                 android:id                     = "@+id/selectingredients_textinput"
                 android:layout_width           = "match_parent"
                 android:layout_height          = "wrap_content"
-                android:alpha                  = "0.6"
-                android:background             = "#5c1b1b1b"
-                android:layout_alignParentLeft = "true"
-                android:focusable              = "true"
-                android:focusableInTouchMode   = "true" >
+                android:background             = "@color/primary_background"
+                android:alpha                  = "0.8"
+                android:layout_alignParentTop  = "true" >
                 <AutoCompleteTextView
                     android:id            = "@+id/selectingredients_autocomplete"
                     android:layout_width  = "match_parent"
                     android:layout_height = "match_parent"
-                    android:color         = "@color/primary"
                     android:inputType     = "text"
                     android:singleLine    = "true"
                     android:hint          = "@string/selectingredients_autocompletehint" />
@@ -54,7 +53,7 @@
                 android:id            = "@+id/selectingredients_showrecipes"
                 android:layout_height = "wrap_content"
                 android:layout_width  = "wrap_content"
-                android:src           = "@drawable/ic_book_open"
+                android:src           = "@drawable/ic_forward_white"
                 android:tint          = "@color/white"
                 android:scaleType     = "center"
                 app:borderWidth       = "0dp"
@@ -68,6 +67,7 @@
 
     <android.support.design.widget.NavigationView
         android:id             = "@+id/selectingredients_navigationview"
+        android:background     = "@color/primary_background"
         android:layout_width   = "wrap_content"
         android:layout_height  = "wrap_content"
         android:layout_gravity = "start" >

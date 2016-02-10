@@ -3,6 +3,7 @@
     <color name="primary">#FF5722</color>
     <color name="primary_background">#FF9F21</color>
     <color name="cardview_background">#FFE2Bd</color>
+    <color name="alpha_black">#3F3F3F</color>
     <color name="primary_dark">#E64A19</color>
     <color name="primary_light">#FFCCBC</color>
     <color name="accent">#9E9E9E</color>

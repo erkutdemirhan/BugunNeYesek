@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:app     = "http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id              = "@+id/shoppinglist_delete"
+        android:orderInCategory = "100"
+        android:title           = "@string/delete_shoppinglist"
+        app:showAsAction        = "never" />
+
+    <item
+        android:id              = "@+id/shoppinglist_share"
+        android:orderInCategory = "200"
+        android:title           = "Share"
+        android:icon            = "@drawable/ic_share_white"
+        app:showAsAction        = "ifRoom" />
+
+</menu>
