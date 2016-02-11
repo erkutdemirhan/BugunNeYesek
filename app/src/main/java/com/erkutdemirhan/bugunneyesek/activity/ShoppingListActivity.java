@@ -30,6 +30,7 @@ public class ShoppingListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shoppinglist);
+        getWindow().setBackgroundDrawableResource(R.drawable.shoppinglist_background);
         initToolbar();
         initIngredientList(savedInstanceState);
     }

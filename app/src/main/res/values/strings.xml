@@ -21,11 +21,14 @@
     <string name="available_ingredients">   Mevcut Malzemeler</string>
     <string name="unavailable_ingredients"> Eksik Malzemeler</string>
     <string name="show_shopping_list">Alışveriş Listesini Göster</string>
+    <string name="add_shopping_list">Alışveriş Listesine Ekle</string>
     <string name="add_shopping_list_message">Eksik malzemeler alışveriş listesine eklendi</string>
 
     <string name="shopping_list">Alışveriş Listesi</string>
     <string name="no_item_shopping_list">Alışveriş listesinde malzeme bulunmamaktadır</string>
-    <string name="delete_shoppinglist">Alışveriş listesini temizle</string>
+    <string name="delete_shoppinglist">Alışveriş Listesini Temizle</string>
     <string name="shopping_list_share_message">Alışveriş listesini paylaşacağınız uygulamayı seçiniz</string>
+
+    <string name="search_recipe">Tarif ara...</string>
 
 </resources>

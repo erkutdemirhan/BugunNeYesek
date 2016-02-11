@@ -9,4 +9,12 @@
         android:title           = "@string/show_shopping_list"
         app:showAsAction        = "never" />
 
+    <item
+        android:id              = "@+id/recipelist_search"
+        android:orderInCategory = "200"
+        android:icon            = "@drawable/ic_search_white"
+        android:title           = "@string/search_recipe"
+        app:showAsAction        = "always"
+        app:actionViewClass     = "android.support.v7.widget.SearchView" />
+
 </menu>

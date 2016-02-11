@@ -12,8 +12,7 @@
     <item
         android:id              = "@+id/recipeactivity_addshoppinglist"
         android:orderInCategory = "200"
-        android:title           = "Share"
-        android:icon            = "@drawable/ic_add_shopping_cart_white"
-        app:showAsAction        = "ifRoom" />
+        android:title           = "@string/add_shopping_list"
+        app:showAsAction        = "never" />
 
 </menu>

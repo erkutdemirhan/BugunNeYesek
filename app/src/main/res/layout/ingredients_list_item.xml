@@ -5,8 +5,8 @@
     android:layout_width          = "wrap_content"
     android:layout_height         = "wrap_content"
     android:layout_margin         = "@dimen/ingredient_list_item_margin"
-    card_view:cardBackgroundColor = "@color/primary"
-    card_view:cardCornerRadius    = "10dp"
+    card_view:cardBackgroundColor = "@color/ingredient_background"
+    card_view:cardCornerRadius    = "8dp"
     card_view:cardElevation       = "@dimen/elevation" >
 
     <LinearLayout
@@ -20,14 +20,14 @@
             android:layout_height = "wrap_content"
             android:padding       = "5dp"
             android:textColor     = "@color/primary_text"
-            android:textSize      = "25sp" />
+            android:textSize      = "21sp" />
 
         <ImageView
             android:id             = "@+id/remove_ingredient_icon"
             android:layout_width   = "wrap_content"
             android:layout_height  = "wrap_content"
-            android:layout_gravity = "right"
-            android:src            = "@drawable/remove_item" />
+            android:layout_gravity = "right|center_vertical"
+            android:src            = "@drawable/ic_close_circle_black" />
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

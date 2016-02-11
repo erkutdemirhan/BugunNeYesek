@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.erkutdemirhan.bugunneyesek.R;
 import com.erkutdemirhan.bugunneyesek.domain.Ingredient;
+import com.erkutdemirhan.bugunneyesek.utils.StringUtils;
 
 import java.util.ArrayList;
 
@@ -72,10 +73,10 @@ public class AutoCompleteArrayAdapter extends ArrayAdapter<Ingredient> implement
             ArrayList<Ingredient> filteredList = new ArrayList<>();
             FilterResults results              = new FilterResults();
             if(constraint != null) {
-                String filterString            = toNonTurkish(constraint.toString()).toLowerCase();
+                String filterString            = StringUtils.toNonTurkish(constraint.toString()).toLowerCase();
                 String filterableString;
                 for(Ingredient ingr:mIngredients) {
-                    filterableString = toNonTurkish(ingr.getIngredientName()).toLowerCase();
+                    filterableString = StringUtils.toNonTurkish(ingr.getIngredientName()).toLowerCase();
                     if(filterableString.contains(filterString)) {
                         filteredList.add(ingr);
                     }
@@ -90,23 +91,6 @@ public class AutoCompleteArrayAdapter extends ArrayAdapter<Ingredient> implement
         protected void publishResults(CharSequence constraint, FilterResults results) {
             mFilteredIngredients = (ArrayList<Ingredient>) results.values;
             notifyDataSetChanged();
-        }
-
-        private String toNonTurkish(String original) {
-            original = original.replace("Ç", "C");
-            original = original.replace("Ş", "S");
-            original = original.replace("Ğ", "G");
-            original = original.replace("İ", "I");
-            original = original.replace("Ö", "O");
-            original = original.replace("Ü", "U");
-
-            original = original.replace("ç", "c");
-            original = original.replace("ş", "s");
-            original = original.replace("ğ", "g");
-            original = original.replace("ı", "i");
-            original = original.replace("ö", "o");
-            original = original.replace("ü", "u");
-            return original;
         }
     }
 

@@ -28,16 +28,15 @@ public class RecipeListViewAdapter extends RecyclerView.Adapter<RecipeListViewAd
     private ArrayList<Ingredient> mSelectedIngredientList;
 
     public RecipeListViewAdapter(ArrayList<Recipe> recipeList, ArrayList<Ingredient> ingredientList) {
-        mRecipeList             = recipeList;
+        mRecipeList             = new ArrayList<>();
+        mRecipeList.addAll(recipeList);
         mSelectedIngredientList = ingredientList;
     }
 
-    public ArrayList<Recipe> getRecipeList() {
-        return mRecipeList;
-    }
-
-    public ArrayList<Ingredient> getSelectedIngredientList() {
-        return mSelectedIngredientList;
+    public void updateRecipeList(ArrayList<Recipe> recipes) {
+        mRecipeList.clear();
+        mRecipeList.addAll(recipes);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -88,4 +87,4 @@ public class RecipeListViewAdapter extends RecyclerView.Adapter<RecipeListViewAd
             v.getContext().startActivity(intent);
         }
     }
-}
+ }
