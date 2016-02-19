@@ -73,7 +73,8 @@ public class SelectIngredientsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.selectingredients_settings:
+            case R.id.selectingredients_clearingrlist:
+                mSelectedIngredientsAdapter.clearIngredientList();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

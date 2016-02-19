@@ -1,5 +1,6 @@
 package com.erkutdemirhan.bugunneyesek.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -38,9 +39,20 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
     public ArrayList<Recipe> getAllRecipes() {
         SQLiteDatabase db     = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        String[] sqlSelect    = {"id", "name", "type", "instructions", "image_name"};
+        String[] sqlSelect    = {"id", "name", "type", "is_favorite", "instructions", "image_name"};
         qb.setTables("recipes");
         Cursor c = qb.query(db, sqlSelect, null, null, null, null, null);
+        return getRecipes(c);
+    }
+
+    @Override
+    public ArrayList<Recipe> getAllFavoriteRecipes() {
+        SQLiteDatabase db     = getReadableDatabase();
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        String[] sqlSelect    = {"id", "name", "type", "is_favorite", "instructions", "image_name"};
+        String   sqlWhere     = "is_favorite != 0";
+        qb.setTables("recipes");
+        Cursor c = qb.query(db, sqlSelect, sqlWhere, null, null, null, null);
         return getRecipes(c);
     }
 
@@ -48,7 +60,7 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
     public ArrayList<Recipe> getRecipesOfGivenType(int recipeType) {
         SQLiteDatabase db     = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        String[] sqlSelect    = {"id", "name", "type", "instructions", "image_name"};
+        String[] sqlSelect    = {"id", "name", "type", "is_favorite", "instructions", "image_name"};
         qb.setTables("recipes");
         Cursor c = qb.query(db, sqlSelect, "type=?", new String[]{String.valueOf(recipeType)}, null, null, null);
         return getRecipes(c);
@@ -72,24 +84,6 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
     }
 
     @Override
-    public ArrayList<Recipe> getRecipesFromIngrListGivenType(ArrayList<Ingredient> ingrList, int recipeType) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT recipes.* ");
-        sb.append("FROM recipes INNER JOIN recipeingredients INNER JOIN ingredients ");
-        sb.append("ON recipes.id=recipeingredients.recipe_id AND recipeingredients.ingr_id=ingredients.id ");
-        sb.append("WHERE ingredients.id " + prepareInStatement(ingrList.size()) + " AND recipes.type=? ");
-        sb.append("GROUP BY recipes.name ORDER BY COUNT(recipes.id) DESC");
-        String[] args       = new String[ingrList.size()+1];
-        for(int i=0; i<ingrList.size(); i++) {
-            args[i] = String.valueOf(ingrList.get(i).getIngredientId());
-        }
-        args[args.length-1] = String.valueOf(recipeType);
-        SQLiteDatabase db   = getReadableDatabase();
-        Cursor c            = db.rawQuery(sb.toString(), args);
-        return getRecipes(c);
-    }
-
-    @Override
     public ArrayList<Ingredient> getAllIngredients() {
         SQLiteDatabase db     = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
@@ -101,28 +95,6 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
             int id          = c.getInt(c.getColumnIndex("id"));
             String name     = c.getString(c.getColumnIndex("name"));
             String amount   = "";
-            ingrList.add(new Ingredient(id, name, amount));
-        }
-        c.close();
-        Collections.sort(ingrList);
-        return ingrList;
-    }
-
-    @Override
-    public ArrayList<Ingredient> getIngredientsForRecipeType(int recipeType) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT ingredients.id, ingredients.name ");
-        sb.append("FROM recipes INNER JOIN recipeingredients INNER JOIN ingredients ");
-        sb.append("ON recipes.id=recipeingredients.recipe_id AND recipeingredients.ingr_id=ingredients.id ");
-        sb.append("WHERE recipes.type=? ");
-        sb.append("GROUP BY ingredients.id");
-        ArrayList<Ingredient> ingrList = new ArrayList<>();
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor c          = db.rawQuery(sb.toString(), new String[]{String.valueOf(recipeType)});
-        while(c.moveToNext()) {
-            int id        = c.getInt(c.getColumnIndex("id"));
-            String name   = c.getString(c.getColumnIndex("name"));
-            String amount = "";
             ingrList.add(new Ingredient(id, name, amount));
         }
         c.close();
@@ -147,6 +119,16 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
         return recipeTypeList;
     }
 
+    @Override
+    public void updateRecipeFavorite(Recipe recipe) {
+        boolean isFavorite    = recipe.isFavorite();
+        int recipeId          = recipe.getRecipeId();
+        SQLiteDatabase db     = getReadableDatabase();
+        ContentValues args    = new ContentValues();
+        args.put("is_favorite", isFavorite? 1:0);
+        db.update("recipes", args, "id="+recipeId, null);
+    }
+
     private ArrayList<Recipe> getRecipes(Cursor c) {
         ArrayList<Recipe> recipeList = new ArrayList<>();
         while(c.moveToNext()) {
@@ -155,8 +137,9 @@ public class DbHelper extends SQLiteAssetHelper implements DbHelperInterface {
             int type              = c.getInt(c.getColumnIndex("type"));
             String instructions   = c.getString(c.getColumnIndex("instructions"));
             String imageName      = c.getString(c.getColumnIndex("image_name"));
+            boolean isFavorite    = c.getInt(c.getColumnIndex("is_favorite")) == 0 ? false:true;
             ArrayList<Ingredient> ingredientList = getRecipeIngredients(id);
-            recipeList.add(new Recipe(id, name, instructions, imageName, type, ingredientList));
+            recipeList.add(new Recipe(id, name, instructions, imageName, type, ingredientList, isFavorite));
         }
         c.close();
         return recipeList;

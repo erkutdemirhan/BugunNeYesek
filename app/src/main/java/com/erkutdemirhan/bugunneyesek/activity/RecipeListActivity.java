@@ -103,11 +103,14 @@ public class RecipeListActivity extends AppCompatActivity {
         mToolbar            = (Toolbar) findViewById(R.id.recipelist_toolbar);
         String toolbarTitle = "";
         if(mActivityState.containsKey(RecipeListActivity.RECIPE_TYPE_KEY)) {
-            toolbarTitle    = getString(R.string.all_recipes);
             RecipeType type = (RecipeType) mActivityState.getSerializable(RecipeListActivity.RECIPE_TYPE_KEY);
-            toolbarTitle    = (type.getTypeId()==-1) ?
-                    toolbarTitle:
-                    toolbarTitle + " (" + type.getTypeName() + ")" ;
+            if(type.getTypeId() == -1) {
+                toolbarTitle = getString(R.string.all_recipes);
+            } else if(type.getTypeId() == -2) {
+                toolbarTitle = getString(R.string.my_favorite_recipes);
+            } else {
+                toolbarTitle = toolbarTitle + " (" + type.getTypeName() + ")" ;
+            }
         } else if(mActivityState.containsKey(RecipeListActivity.INGR_LIST_KEY)) {
             toolbarTitle    = getString(R.string.recipelist_toolbar_title_ingr);
         }
@@ -132,9 +135,11 @@ public class RecipeListActivity extends AppCompatActivity {
         if(mActivityState.containsKey(RecipeListActivity.RECIPE_TYPE_KEY)) {
             RecipeType type  = (RecipeType) mActivityState.getSerializable(RecipeListActivity.RECIPE_TYPE_KEY);
             if(type.getTypeId() == -1) {
-                mRecipeList   = DbHelperFactory.getDatabaseHelper(this).getAllRecipes();
+                mRecipeList = DbHelperFactory.getDatabaseHelper(this).getAllRecipes();
+            } else if(type.getTypeId() == -2) {
+                mRecipeList = DbHelperFactory.getDatabaseHelper(this).getAllFavoriteRecipes();
             } else {
-                mRecipeList   = DbHelperFactory.getDatabaseHelper(this).getRecipesOfGivenType(type.getTypeId());
+                mRecipeList = DbHelperFactory.getDatabaseHelper(this).getRecipesOfGivenType(type.getTypeId());
             }
             mRecipeListAdapter = new RecipeListViewAdapter(mRecipeList, null);
         } else if(mActivityState.containsKey(RecipeListActivity.INGR_LIST_KEY)) {

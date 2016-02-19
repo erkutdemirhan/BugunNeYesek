@@ -30,5 +30,9 @@
     <string name="shopping_list_share_message">Alışveriş listesini paylaşacağınız uygulamayı seçiniz</string>
 
     <string name="search_recipe">Tarif ara...</string>
+    <string name="clear_ingredient_list">Malzeme Listesini Temizle</string>
+    <string name="my_favorite_recipes">Favori tariflerim</string>
+    <string name="set_favorite_recipe">Tarif favori tarif listesine eklendi</string>
+    <string name="delete_favorite_recipes">Tarif favori tarif listesinden çıkarıldı</string>
 
 </resources>

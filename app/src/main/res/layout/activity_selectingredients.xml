@@ -30,13 +30,12 @@
                 android:id                     = "@+id/selectingredients_textinput"
                 android:layout_width           = "match_parent"
                 android:layout_height          = "wrap_content"
-                android:background             = "@color/primary_background"
-                android:alpha                  = "0.8"
+                android:theme                  = "@style/IngredientInputStyle"
                 android:layout_alignParentTop  = "true" >
                 <AutoCompleteTextView
                     android:id            = "@+id/selectingredients_autocomplete"
                     android:layout_width  = "match_parent"
-                    android:layout_height = "match_parent"
+                    android:layout_height = "wrap_content"
                     android:inputType     = "text"
                     android:singleLine    = "true"
                     android:hint          = "@string/selectingredients_autocompletehint" />

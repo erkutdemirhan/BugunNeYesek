@@ -69,9 +69,14 @@ public class ShoppingListActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        BugunNeYesek.getInstance().updateShoppingList(mShoppingListAdapter.getIngredientList());
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        BugunNeYesek.getInstance().updateShoppingList(mShoppingListAdapter.getIngredientList());
         outState.putSerializable(ShoppingListActivity.SHOPPING_LIST, mShoppingListAdapter.getIngredientList());
     }
 
@@ -87,6 +92,9 @@ public class ShoppingListActivity extends AppCompatActivity {
             shoppingList = BugunNeYesek.getInstance().getShoppingList();
         }
         mShoppingListAdapter = new IngredientListViewAdapter(shoppingList);
+        if(mShoppingListAdapter.isEmpty()) {
+            Toast.makeText(this, getString(R.string.no_item_shopping_list), Toast.LENGTH_SHORT).show();
+        }
         shoppingListView.setAdapter(mShoppingListAdapter);
     }
 

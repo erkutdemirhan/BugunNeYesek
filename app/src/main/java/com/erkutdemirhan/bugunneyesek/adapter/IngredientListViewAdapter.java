@@ -39,8 +39,8 @@ public class IngredientListViewAdapter extends RecyclerView.Adapter<IngredientLi
             mImageView = (ImageView) v.findViewById(R.id.remove_ingredient_icon);
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    int position = getPosition();
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
                     removeIngredient(position);
                     Log.d("onClick", "remove ingredient at position: " + position);
                 }

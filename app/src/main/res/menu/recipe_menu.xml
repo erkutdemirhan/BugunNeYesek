@@ -15,4 +15,10 @@
         android:title           = "@string/add_shopping_list"
         app:showAsAction        = "never" />
 
+    <item
+        android:id              = "@+id/recipeactivity_favoritebutton"
+        android:orderInCategory = "300"
+        android:title           = "Favorite button"
+        app:showAsAction        = "always" />
+
 </menu>

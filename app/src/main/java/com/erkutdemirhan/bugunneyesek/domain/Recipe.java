@@ -12,24 +12,27 @@ public class Recipe implements Comparable<Recipe>, Serializable {
     public static final String KEY = "Recipe";
 
     private final int                   mRecipeId;
+    private final int                   mRecipeTypeId;
     private final String                mRecipeName;
     private final String                mInstructions;
     private final String                mImageFileName;
-    private final int                   mRecipeTypeId;
     private final ArrayList<Ingredient> mIngredientList;
+    private boolean                     mIsFavorite;
 
     public Recipe(int id,
                   String name,
                   String instructions,
                   String imageFileName,
                   int type,
-                  ArrayList<Ingredient> ingredientList) {
+                  ArrayList<Ingredient> ingredientList,
+                  boolean isFavorite) {
         mRecipeId       = id;
         mRecipeName     = name;
         mInstructions   = instructions;
         mRecipeTypeId   = type;
         mImageFileName  = imageFileName;
         mIngredientList = ingredientList;
+        mIsFavorite     = isFavorite;
     }
 
     public int getRecipeId() {
@@ -54,6 +57,14 @@ public class Recipe implements Comparable<Recipe>, Serializable {
 
     public ArrayList<Ingredient> getIngredientList() {
         return this.mIngredientList;
+    }
+
+    public boolean isFavorite() {
+        return mIsFavorite;
+    }
+
+    public void setFavorite(boolean bool) {
+        mIsFavorite = bool;
     }
 
     @Override

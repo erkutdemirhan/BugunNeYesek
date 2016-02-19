@@ -34,6 +34,7 @@ public class BugunNeYesek extends Application {
         mShoppingList       = new HashSet<>();
         mRecipeTypeList     = new ArrayList<>();
         mRecipeTypeList.add(new RecipeType(-1, getString(R.string.all_recipes)));
+        mRecipeTypeList.add(new RecipeType(-2, getString(R.string.my_favorite_recipes)));
         mRecipeTypeList.addAll(DbHelperFactory.getDatabaseHelper(getApplicationContext()).getAllRecipeTypes());
     }
 
